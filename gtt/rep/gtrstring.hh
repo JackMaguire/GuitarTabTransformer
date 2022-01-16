@@ -9,10 +9,6 @@ class GtrString {
 public:
   GtrString(){}
 
-  /*GtrString( Note const & n ) :
-    open_string_note_( n )
-  {}*/
-
   template< typename T >
   GtrString( T const & t ) :
     open_string_note_( t )
@@ -67,7 +63,7 @@ private:
 
 void
 GtrString::run_unit_tests(){
-  GtrString const s( "Ab/5", 24 );
+  GtrString s( "Ab/5", 24 );
   GTT_ASSERT_EQUALS( s.get_fret( s.open_string_note() ), 0 );
   for( int i = -20; i <= 20; ++i ){
     GTT_ASSERT_EQUALS( s.get_fret( s.open_string_note()+i ), i );
@@ -80,6 +76,10 @@ GtrString::run_unit_tests(){
   GTT_ASSERT( s.can_represent( Note( "Ab/7" )-1 ) );
   GTT_ASSERT( s.can_represent( Note( "Ab/7" ) ) );
   GTT_ASSERT( not s.can_represent( Note( "Ab/7" )+1 ) );
+  GTT_ASSERT( not s.can_represent( Note( "Ab/8" ) ) );
+
+  s.set_max_fret( 25 );
+  GTT_ASSERT( s.can_represent( Note( "Ab/7" )+1 ) );
   GTT_ASSERT( not s.can_represent( Note( "Ab/8" ) ) );
 }
 
