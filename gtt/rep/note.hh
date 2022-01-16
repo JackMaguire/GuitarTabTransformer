@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <iostream>
+#include <compare>
 
 #include <gtt/asserts.hh>
 
@@ -90,7 +91,7 @@ public: //mutators
     return as_int();
   }
 
-  int
+  Note
   operator-( int const diff ) const {
     return Note( as_int() - diff );
   }
@@ -101,7 +102,7 @@ public: //mutators
     return *this;
   }
 
-  int
+  Note
   operator+( int const diff ) const {
     return Note( as_int() + diff );
   }
@@ -110,6 +111,16 @@ public: //mutators
   operator+=( int const diff ) {
     init_from_int( as_int() + diff );
     return *this;
+  }
+
+  std::strong_ordering
+  operator<=>( Note const & that) const {
+    //https://en.cppreference.com/w/cpp/language/default_comparisons
+    if (auto cmp = octave_ <=> that.octave_; cmp != 0){
+      return cmp;
+    } else {
+      return letter_ <=> that.letter_;
+    }
   }
 
   bool
@@ -233,6 +244,16 @@ Note::run_unit_tests(){
     n += 25; // A/2
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::A) );
     GTT_ASSERT_EQUALS( n.octave_, 2 );
+  }
+
+  {
+    GTT_ASSERT( Note( "A/1" ) != Note( "B/1" ) );
+    GTT_ASSERT( Note( "A/1" ) <  Note( "B/1" ) );
+    GTT_ASSERT( Note( "A/1" ) <= Note( "A/1" ) );
+    GTT_ASSERT( Note( "A/1" ) == Note( "A/1" ) );
+    GTT_ASSERT( Note( "A/1" ) >= Note( "A/1" ) );
+    GTT_ASSERT( Note( "G/5" ) >  Note( "A/4" ) );
+    GTT_ASSERT( Note( "G/5" ) != Note( "A/4" ) );
   }
 }
 
