@@ -64,11 +64,58 @@ public:
     init_from_string( notation );
   }
 
+  Note( int const note ) {
+    init_from_int( note );
+  }
+
   static
   void run_unit_tests();
 
 public: //mutators  
   void init_from_string( std::string const & notation );
+
+  void init_from_int( int const i ){
+    constexpr int n_notes_per_octave = 12;
+    octave_ = i / n_notes_per_octave;
+    letter_ = Letter( i % n_notes_per_octave );
+  }
+
+  int
+  as_int() const {
+    constexpr int n_notes_per_octave = 12;
+    return n_notes_per_octave*int(octave_) + int(letter_);
+  }
+
+  operator int(){
+    return as_int();
+  }
+
+  int
+  operator-( int const diff ) const {
+    return Note( as_int() - diff );
+  }
+
+  Note &
+  operator-=( int const diff ) {
+    init_from_int( as_int() - diff );
+    return *this;
+  }
+
+  int
+  operator+( int const diff ) const {
+    return Note( as_int() + diff );
+  }
+
+  Note &
+  operator+=( int const diff ) {
+    init_from_int( as_int() + diff );
+    return *this;
+  }
+
+  bool
+  operator==( Note const & other ) const {
+    return letter_ == other.letter_ and octave_ == other.octave_;
+  }
 
 private:
   Letter letter_;
@@ -162,10 +209,17 @@ Note::char2letter( char const c ){
 void
 Note::run_unit_tests(){
   {
+    //test construct
     Note const n( "G/4" );
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::G) );
     GTT_ASSERT_EQUALS( n.octave_, 4 );
 
+    //test ints
+    int const n_as_int = n.as_int();
+    Note const n_from_int( n_as_int );
+    GTT_ASSERT( n_from_int == n );
+
+    //test mutate operator
     Note const g3 = n - Note::OctaveStep;
     GTT_ASSERT_EQUALS( int(g3.letter_), int(Letter::G) );
     GTT_ASSERT_EQUALS( g3.octave_, 3 );
