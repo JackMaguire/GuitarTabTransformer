@@ -1,10 +1,77 @@
 #pragma once
 
+#include "gtt/rep/note.hh"
+
 namespace gtt {
 namespace rep {
 
 class GtrString {
-  
+public:
+  GtrString(){}
+
+  /*GtrString( Note const & n ) :
+    open_string_note_( n )
+  {}*/
+
+  template< typename T >
+  GtrString( T const & t ) :
+    open_string_note_( t )
+  {}
+
+  template< typename T >
+  GtrString( T const & t, signed char const max_fret ) :
+    open_string_note_( t ),
+    max_fret_( max_fret )
+  {}
+
+  static
+  void run_unit_tests();
+
+  signed char
+  get_fret( Note const & note ) const {
+    return note - open_string_note_;
+  }
+
+  bool
+  can_represent( Note const & note ) const {
+    signed char const fret = get_fret( note );
+    return fret >= 0 and fret <= max_fret_;
+  }
+
+public: //getters/setters
+
+  Note const &
+  open_string_note() const {
+    return open_string_note_;
+  }
+
+  void
+  set_open_string_note( Note const & n ) {
+    open_string_note_ = n;
+  }
+
+  signed char
+  max_fret() const {
+    return max_fret_;
+  }
+
+  void
+  set_max_fret( signed char const f ) {
+    max_fret_ = f;
+  }
+
+private:
+  Note open_string_note_;
+  signed char max_fret_ = 24;
+};
+
+void
+GtrString::run_unit_tests(){
+  GtrString const s( "Ab/5", 12 );
+  GTT_ASSERT_EQUALS( s.get_fret( s.open_string_note() ), 0 );
+  for( int i = -20; i <= 20; ++i ){
+    GTT_ASSERT_EQUALS( s.get_fret( s.open_string_note()+i ), i );
+  }
 }
 
 } // rep

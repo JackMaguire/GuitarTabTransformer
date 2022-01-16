@@ -65,9 +65,11 @@ public:
     init_from_string( notation );
   }
 
-  Note( int const note ) {
+  Note( signed char const note ) {
     init_from_int( note );
   }
+
+  Note( Note const & ) = default;
 
   static
   void run_unit_tests();
@@ -75,40 +77,49 @@ public:
 public: //mutators  
   void init_from_string( std::string const & notation );
 
-  void init_from_int( int const i ){
-    constexpr int n_notes_per_octave = 12;
+  void init_from_int( signed char const i ){
+    constexpr signed char n_notes_per_octave = 12;
     octave_ = i / n_notes_per_octave;
     letter_ = Letter( i % n_notes_per_octave );
   }
 
-  int
+  signed char
   as_int() const {
-    constexpr int n_notes_per_octave = 12;
+    constexpr signed char n_notes_per_octave = 12;
     return n_notes_per_octave*int(octave_) + int(letter_);
   }
 
-  operator int(){
+  /*operator int(){
+    return as_int();
+  }*/
+
+  operator signed char(){
     return as_int();
   }
 
   Note
-  operator-( int const diff ) const {
+  operator-( signed char const diff ) const {
     return Note( as_int() - diff );
   }
 
+  Note
+  operator-( Note const diff ) const {
+    return Note( as_int() - diff.as_int() );
+  }
+
   Note &
-  operator-=( int const diff ) {
+  operator-=( signed char const diff ) {
     init_from_int( as_int() - diff );
     return *this;
   }
 
   Note
-  operator+( int const diff ) const {
+  operator+( signed char const diff ) const {
     return Note( as_int() + diff );
   }
 
   Note &
-  operator+=( int const diff ) {
+  operator+=( signed char const diff ) {
     init_from_int( as_int() + diff );
     return *this;
   }
