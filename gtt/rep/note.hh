@@ -165,12 +165,20 @@ Note::run_unit_tests(){
     Note const n( "G/4" );
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::G) );
     GTT_ASSERT_EQUALS( n.octave_, 4 );
+
+    Note const g3 = n - Note::OctaveStep;
+    GTT_ASSERT_EQUALS( int(g3.letter_), int(Letter::G) );
+    GTT_ASSERT_EQUALS( g3.octave_, 3 );
   }
 
   {
-    Note const n( "Ab/0" );
+    Note n( "Ab/0" );
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::Ab) );
     GTT_ASSERT_EQUALS( n.octave_, 0 );
+
+    n += 25; // A/2
+    GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::A) );
+    GTT_ASSERT_EQUALS( n.octave_, 2 );
   }
 }
 
