@@ -4,6 +4,7 @@
 #include <string_view>
 #include <iostream>
 #include <compare>
+#include <concepts>
 
 #include <gtt/asserts.hh>
 
@@ -89,22 +90,14 @@ public: //mutators
     return n_notes_per_octave*int(octave_) + int(letter_);
   }
 
-  /*operator int(){
-    return as_int();
-  }*/
-
-  operator signed char(){
+  operator signed char() const{
     return as_int();
   }
 
+  template< typename T >
   Note
-  operator-( signed char const diff ) const {
-    return Note( as_int() - diff );
-  }
-
-  Note
-  operator-( Note const diff ) const {
-    return Note( as_int() - diff.as_int() );
+  operator-( T const diff ) const {
+    return Note( as_int() - static_cast<signed char>(diff) );
   }
 
   Note &
@@ -113,8 +106,9 @@ public: //mutators
     return *this;
   }
 
+  template< typename T >
   Note
-  operator+( signed char const diff ) const {
+  operator+( T const diff ) const {
     return Note( as_int() + diff );
   }
 
