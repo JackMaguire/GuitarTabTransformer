@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <string_view>
+#include <iostream>
 
 #include <gtt/asserts.hh>
 
@@ -27,7 +29,11 @@ public:
   letter2string( Letter const l ) ;
 
   static Letter
-  string2letter( std::string const & s );
+  string2letter( std::string_view const & s );
+
+  // If you KNOW it isn't a flat or sharp
+  static Letter
+  char2letter( char const c );
 
 
   /*
@@ -50,6 +56,9 @@ public:
     init_from_string( notation );
   }
 
+  static
+  void run_unit_tests();
+
 public: //mutators  
   void init_from_string( std::string const & notation );
 
@@ -61,7 +70,16 @@ private:
 void
 Note::init_from_string( std::string const & notation ){
   //either L/# (like A/2) or LL/# (Gb/4)
+  GTT_DEBUG_ASSERT( notation.size() == 3 or notation.size() == 4 );
 
+  //find positions of dash
+  auto const dash_pos = notation.find( '/' );
+  GTT_ASSERT( dash_pos != std::string::npos );
+  std::string_view const letter_view( &notation[0], dash_pos );
+  letter_ = string2letter( letter_view );
+
+  // assuming single char. We aren't working with <= -1 or >= 10 yet
+  octave_ = notation.back() - '0';
 }
 
 std::string
@@ -85,54 +103,66 @@ Note::letter2string( Note::Letter const l ){
 }
 
 Note::Letter
-Note::string2letter( std::string const & s ){
+Note::string2letter( std::string_view const & s ){
   using Letter = Note::Letter;
   //assumes a value entry
-  switch( s.size() ){
-  case( 1 ):
+  if( s.size() == 1 ) return Note::char2letter( s[0] );
+
+  GTT_ASSERT_EQUALS( s.size(), 2 );
+  switch( s[1] ){
+  case( 'b' ):
     switch( s[0] ){
-    case( 'A' ): return Letter::A;
-    case( 'B' ): return Letter::B;
-    case( 'C' ): return Letter::C;
-    case( 'D' ): return Letter::D;
-    case( 'E' ): return Letter::E;
-    case( 'F' ): return Letter::F;
-    case( 'G' ): return Letter::G;
+    case( 'A' ): return Letter::Ab;
+    case( 'B' ): return Letter::Bb;
+    case( 'D' ): return Letter::Db;
+    case( 'E' ): return Letter::Eb;
+    case( 'G' ): return Letter::Gb;
     default: GTT_ASSERT( false );
     }
-    break;
 
-  case( 2 ):
-    switch( s[1] ){
-    case( 'b' ):
-      switch( s[0] ){
-      case( 'A' ): return Letter::Ab;
-      case( 'B' ): return Letter::Bb;
-      case( 'D' ): return Letter::Db;
-      case( 'E' ): return Letter::Eb;
-      case( 'G' ): return Letter::Gb;
-      default: GTT_ASSERT( false );
-      }
-
-    case ( '#' ):
-      switch( s[0] ){
-      case( 'G' ): return Letter::Ab;
-      case( 'A' ): return Letter::Bb;
-      case( 'C' ): return Letter::Db;
-      case( 'D' ): return Letter::Eb;
-      case( 'F' ): return Letter::Gb;
-      default: GTT_ASSERT( false );
-      }
-
+  case ( '#' ):
+    switch( s[0] ){
+    case( 'G' ): return Letter::Ab;
+    case( 'A' ): return Letter::Bb;
+    case( 'C' ): return Letter::Db;
+    case( 'D' ): return Letter::Eb;
+    case( 'F' ): return Letter::Gb;
     default: GTT_ASSERT( false );
-    }// flat or sharp?
-    break;
+    }
 
   default: GTT_ASSERT( false );
-  } //how big?
-
+  }// flat or sharp?
 }
 
+Note::Letter
+Note::char2letter( char const c ){
+  using Letter = Note::Letter;
+
+  switch( c ){
+  case( 'A' ): return Letter::A;
+  case( 'B' ): return Letter::B;
+  case( 'C' ): return Letter::C;
+  case( 'D' ): return Letter::D;
+  case( 'E' ): return Letter::E;
+  case( 'F' ): return Letter::F;
+  case( 'G' ): return Letter::G;
+  default: GTT_ASSERT( false );
+  }
+}
+
+
+//bool operator==( Note::Letter const & a, Note::Letter const & b ){
+//  return int(a) == int(b);
+//}
+
+void
+Note::run_unit_tests(){
+  {
+    Note const n( "G/4" );
+    GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::G) );
+    GTT_ASSERT_EQUALS( n.octave_, 4 );
+  }
+}
 
 } // rep
 } // gtt

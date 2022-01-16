@@ -22,16 +22,20 @@ struct GuitarTabTransformerException : public std::exception {
 #define STR(x) #x
 #define GTT_ASSERT(x) if (!(x)) { throw GuitarTabTransformerException( "'" + std::string(STR(x)) + "' failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
 
+#define GTT_ASSERT_MSG(x,y) if (!(x)) { throw GuitarTabTransformerException( "'" + std::string(STR(y)) + "' from line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
+
 #define GTT_ASSERT_EQUALS(x,y) if (!(x == y)) { throw GuitarTabTransformerException( std::to_string(x) + " == " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
 
-#define GTT_ASSERT_DELTA( x , y, d ) if ( std::abs( x - y ) > d ) { throw GuitarTabTransformerException( std::to_string(x) + " is within " + std::to_string(d) + " of " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
+#define GTT_ASSERT_DELTA( x, y, d ) if ( std::abs( x - y ) > d ) { throw GuitarTabTransformerException( std::to_string(x) + " is within " + std::to_string(d) + " of " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
 
 #ifndef GTT_DEBUG
 #define GTT_DEBUG_ASSERT(condition) ((void)0)
+#define GTT_DEBUG_ASSERT_MSG(condition,msg) ((void)0)
 #define GTT_DEBUG_ASSERT_EQUALS(x,y) ((void)0)
 #define GTT_DEBUG_ASSERT_DELTA(x,y,d) ((void)0)
 #else
 #define GTT_DEBUG_ASSERT(condition) GTT_ASSERT( condition )
+#define GTT_DEBUG_ASSERT_MSG(condition,msg) GTT_ASSERT_MSG(condition,msg)
 #define GTT_DEBUG_ASSERT_EQUALS(x,y) GTT_ASSERT_EQUALS(x,y)
 #define GTT_DEBUG_ASSERT_DELTA(x,y,d) GTT_ASSERT_DELTA(x,y,d)
 #endif
