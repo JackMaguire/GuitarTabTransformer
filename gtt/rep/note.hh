@@ -17,7 +17,7 @@ public:
   /*
     LETTERS
   */
-  enum class Letter : unsigned char {
+  enum class Letter : signed char {
     C = 0, Db, D, Eb, E, F,
       Gb, G, Ab, A, Bb, B,
       COUNT };
@@ -39,7 +39,15 @@ public:
   /*
     OCTAVES
   */
-  using Octave = unsigned char;
+  using Octave = signed char;
+
+  /*
+    Steps
+   */
+  using StepType = signed char;
+  constexpr static StepType HalfStep = 1;
+  constexpr static StepType WholeStep = 2;
+  constexpr static StepType OctaveStep = 12;
 
 public:
   Note():
@@ -151,16 +159,18 @@ Note::char2letter( char const c ){
 }
 
 
-//bool operator==( Note::Letter const & a, Note::Letter const & b ){
-//  return int(a) == int(b);
-//}
-
 void
 Note::run_unit_tests(){
   {
     Note const n( "G/4" );
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::G) );
     GTT_ASSERT_EQUALS( n.octave_, 4 );
+  }
+
+  {
+    Note const n( "Ab/0" );
+    GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::Ab) );
+    GTT_ASSERT_EQUALS( n.octave_, 0 );
   }
 }
 
