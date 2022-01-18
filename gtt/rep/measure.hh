@@ -247,6 +247,22 @@ Measure::run_unit_tests(){
     }
   }
 
+  { //overlapping notes
+    Measure const m({
+	MeasureNote( "Ab/5", 0.00, 0.25 ),
+	MeasureNote( "E/4",  0.25, 0.25 ),
+	MeasureNote( "E/7",  0.25, 0.125 ),
+	MeasureNote( "Gb/6", 0.75, 0.25 )
+      });
+
+    auto const & rests = m.compute_rests();
+    GTT_ASSERT_EQUALS( rests.size(), 1 );
+
+    auto const & rest = *rests.begin();
+    GTT_ASSERT_EQUALS( rest.starting_point, 0.5 );
+    GTT_ASSERT_EQUALS( rest.length, 0.25 );
+    GTT_ASSERT_EQUALS( rest.ending_point(), 0.75 );
+  }
 }
 
 } // rep
