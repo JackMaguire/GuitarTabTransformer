@@ -1,6 +1,10 @@
 #pragma once
 
 #include "gtt/rep/note.hh"
+#include <string>
+#include <vector>
+//#include <set>
+#include <map>
 
 namespace gtt {
 namespace rep {
@@ -28,7 +32,7 @@ struct NoteDuration {
   constexpr static DurationInt half_triplet = div3(half_note);
 };*/
 
-enum class Duration {
+enum class Duration : signed char {
   WHOLE,
     HALF,
     QUARTER,
@@ -42,8 +46,44 @@ enum class Duration {
 };
 
 struct MeasureNote {
+  std::map< std::string, std::string > tags;
   Note note;
-  
+  Duration duration;
+};
+
+struct TimeSignature {
+  signed char top    = 4;
+  signed char bottom = 4;
+};
+
+struct Measure {
+  std::vector< MeasureNote > notes_in_order;
+};
+
+/*class IntraMeasureAnnotation{
+  virtual ~IntraMeasureAnnotation();
+
+  virtual void draw() = 0;
+};*/
+
+class Measure {
+public:
+
+private:
+  std::map< std::string, Voice > named_voices_;
+  //std::vector< IntraMeasureAnnotation > annotations_;
+};
+
+/*class GlobalAnnotation{
+  virtual ~GlobalAnnotation();
+
+  virtual void draw() = 0;
+};*/
+
+class Song {
+  std::vector< Measure > measures_;
+  //std::vector< GlobalAnnotation > global_annotations_;
+  TimeSignature time_signature_;
 };
 
 } // rep
