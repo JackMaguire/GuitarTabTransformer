@@ -122,6 +122,8 @@ private:
 std::set< MeasureNote >
 Measure::compute_rests() const {
   std::set< MeasureNote > rests;
+
+  //full-measure rest
   if( notes_in_order_.empty() ){
     rests.emplace( 0, 0.0, 1.0, true );
     return rests;
@@ -195,14 +197,54 @@ Measure::run_unit_tests(){
     GTT_ASSERT_EQUALS( m[2].starting_point, 0.75 );
   }
 
-  { //rest test
+  { //single rest test
     Measure const m({
 	MeasureNote( "Ab/5", 0.00, 0.25 ),
 	MeasureNote( "E/4",  0.25, 0.25 ),
 	MeasureNote( "Gb/6", 0.75, 0.25 )
       });
 
-    
+    auto const & rests = m.compute_rests();
+    GTT_ASSERT_EQUALS( rests.size(), 1 );
+
+    auto const & rest = *rests.begin();
+    GTT_ASSERT_EQUALS( rest.starting_point, 0.5 );
+    GTT_ASSERT_EQUALS( rest.length, 0.25 );
+    GTT_ASSERT_EQUALS( rest.ending_point(), 0.75 );
+  }
+
+  { //multiple rest test
+    Measure const m({
+	MeasureNote( "Ab/5", 0.25, 0.125 ),
+	MeasureNote( "Gb/6", 0.75, 0.125 )
+      });
+
+    auto const & rests = m.compute_rests();
+    GTT_ASSERT_EQUALS( rests.size(), 3 );
+
+    auto iter = rests.begin();
+    {
+      auto const & rest = *iter;
+      GTT_ASSERT_EQUALS( rest.starting_point, 0.0 );
+      GTT_ASSERT_EQUALS( rest.length, 0.25 );
+      GTT_ASSERT_EQUALS( rest.ending_point(), 0.25 );
+    }
+
+    ++iter;
+    {
+      auto const & rest = *iter;
+      GTT_ASSERT_EQUALS( rest.starting_point, 0.375 );
+      GTT_ASSERT_EQUALS( rest.length, 0.375 );
+      GTT_ASSERT_EQUALS( rest.ending_point(), 0.75 );
+    }
+
+    ++iter;
+    {
+      auto const & rest = *iter;
+      GTT_ASSERT_EQUALS( rest.starting_point, 0.875 );
+      GTT_ASSERT_EQUALS( rest.length, 0.125 );
+      GTT_ASSERT_EQUALS( rest.ending_point(), 1.0 );
+    }
   }
 
 }
