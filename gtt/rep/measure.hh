@@ -48,24 +48,36 @@ struct NoteDuration {
 struct MeasureNote {
   
   template<typename T>
-  MeasureNote( T const & t, float const start, float const l ) :
+  MeasureNote(
+    T const & t,
+    float const start,
+    float const l,
+    bool const rest = false
+  ) :
     note( t ),
+    is_rest( rest ),
     starting_point( start ),
     length( l )
   {}
 
-  std::map< std::string, std::string > tags;
-  Note note;
-  //Duration duration;
-  
-  //both measured as fraction of a measure
-  float starting_point;
-  float length;
 
   bool
   operator< ( MeasureNote const & other ) const {
     return starting_point < other.starting_point;
   }
+
+  float
+  ending_point() const {
+    return starting_point + length;
+  }
+
+  std::map< std::string, std::string > tags;
+  Note note;
+  bool is_rest = false;
+  
+  //both measured as fraction of a measure
+  float starting_point;
+  float length;
 };
 
 struct Measure {
@@ -98,11 +110,53 @@ public:
     return notes_in_order_.begin();
   }
 
+  std::set< MeasureNote >
+  compute_rests() const;
+
 private:
   //std::vector< MeasureNote > notes_in_order_;
   std::set< MeasureNote > notes_in_order_; //inefficient but portable
 
 };
+
+std::set< MeasureNote >
+Measure::compute_rests() const {
+  std::set< MeasureNote > rests;
+  if( notes_in_order_.empty() ){
+    rests.emplace( 0, 0.0, 1.0, true );
+    return rests;
+  }
+
+  {//front
+    MeasureNote const & first = *notes_in_order_.begin();
+    if( first.starting_point > 0.0 ){
+      rests.emplace( 0, 0.0, first.starting_point, true );
+    }
+  }
+
+  {//back
+    MeasureNote const & back = *std::prev( notes_in_order_.end() );
+    float const back_end = back.ending_point();
+    float const diff = 1.0 - back_end;
+    if( diff > 0.00001 ){
+      rests.emplace( 0, back_end, diff, true );
+    }
+  }
+
+  for( auto iter = notes_in_order_.begin();
+       iter != notes_in_order_.end() and
+	 std::next(iter) != notes_in_order_.end();) {
+    MeasureNote const & a = *iter;
+    MeasureNote const & b = *(++iter);
+    float const a_end = a.ending_point();
+    float const diff = b.starting_point - a_end;
+    if( diff > 0.00001 ){
+      rests.emplace( 0, a_end, diff, true );
+    }
+  }
+
+  return rests;
+}
 
 struct TimeSignature {
   signed char top    = 4;
@@ -147,6 +201,7 @@ Measure::run_unit_tests(){
 	MeasureNote( "E/4",  0.25, 0.25 ),
 	MeasureNote( "Gb/6", 0.75, 0.25 )
       });
+
     
   }
 
