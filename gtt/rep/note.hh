@@ -138,6 +138,12 @@ private:
   Octave octave_;
 };
 
+Note
+operator "" _note( char const * a, unsigned long const u ){
+  std::string const s( a, u );
+  return Note( s );
+}
+
 void
 Note::init_from_string( std::string const & notation ){
   //either L/# (like A/2) or LL/# (Gb/4)
@@ -249,6 +255,13 @@ Note::run_unit_tests(){
     n += 25; // A/2
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::A) );
     GTT_ASSERT_EQUALS( n.octave_, 2 );
+  }
+
+  {
+    Note n( "Ab/0" );
+    GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::Ab) );
+    GTT_ASSERT_EQUALS( n.octave_, 0 );
+    GTT_ASSERT( n == "Ab/0"_note );
   }
 
   {

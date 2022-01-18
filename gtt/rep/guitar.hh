@@ -31,11 +31,20 @@ public:
   static
   void run_unit_tests();
 
+  signed char
+  highest_string_for_note( Note const & note ) const {
+    for( unsigned int i = 0; i < strings_.size(); ++i ){
+      if( strings_[i].can_represent( note ) ) return i;
+    }
+    return strings_.size()-1;//last string
+  }
+
 private:
   std::vector< GtrString > strings_; //from high to low
 };
 
 class GuitarFactory {
+public:
   /*
     GUITARS
    */

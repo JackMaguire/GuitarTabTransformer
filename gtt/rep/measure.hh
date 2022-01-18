@@ -1,6 +1,8 @@
 #pragma once
 
 #include "gtt/rep/note.hh"
+#include "gtt/rep/guitar.hh"
+
 #include <string>
 #include <vector>
 #include <set>
@@ -37,6 +39,21 @@ struct MeasureNote {
     length( l )
   {}
 
+  template<typename T>
+  MeasureNote(
+    T const & t,
+    Guitar const & guitar,
+    float const start,
+    float const l,
+    bool const rest = false
+  ) :
+    note( t ),
+    is_rest( rest ),
+    starting_point( start ),
+    length( l )
+  {
+    string_assignment = guitar.highest_string_for_note( note );
+  }
 
   bool
   operator< ( MeasureNote const & other ) const {
@@ -55,9 +72,12 @@ struct MeasureNote {
   //both measured as fraction of a measure
   float starting_point;
   float length;
+
+  //which string do we play this on?
+  signed char string_assignment = 0;
 };
 
-struct Measure {
+class Measure {
 public:
   Measure( std::set< MeasureNote > && notes ):
     notes_in_order_( notes )
@@ -93,7 +113,6 @@ public:
 private:
   //std::vector< MeasureNote > notes_in_order_;
   std::set< MeasureNote > notes_in_order_; //inefficient but portable
-
 };
 
 std::set< MeasureNote >
@@ -239,6 +258,25 @@ Measure::run_unit_tests(){
     GTT_ASSERT_EQUALS( rest.starting_point, 0.5 );
     GTT_ASSERT_EQUALS( rest.length, 0.25 );
     GTT_ASSERT_EQUALS( rest.ending_point(), 0.75 );
+  }
+
+  { //auto-assign strings
+    Guitar const g = GuitarFactory::standard_guitar();
+    Measure const m({
+	MeasureNote( "G/3"_note +3, g, 0.00, 0.25 ),
+	MeasureNote( "A/2",  g, 0.25, 0.25 ),
+	MeasureNote( "D/3"_note -1, g, 0.75, 0.25 )
+      });
+
+    auto iter = m.begin();
+    GTT_ASSERT_EQUALS( iter->string_assignment, 2 );
+
+    ++iter;
+    GTT_ASSERT_EQUALS( iter->string_assignment, 4 );
+
+    ++iter;
+    GTT_ASSERT_EQUALS( iter->string_assignment, 4 );
+    
   }
 }
 
