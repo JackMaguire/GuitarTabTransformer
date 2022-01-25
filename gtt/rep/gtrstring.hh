@@ -2,6 +2,9 @@
 
 #include "gtt/rep/note.hh"
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 namespace gtt {
 namespace rep {
 
@@ -56,6 +59,19 @@ public: //getters/setters
     max_fret_ = f;
   }
 
+public: //serialization
+  void
+  serialize( json & j ) const {
+    j[ "note" ] = open_string_note_.as_string();
+    j[ "max_fret" ] = max_fret_;
+  }
+
+  void
+  deserialize( json const & j ) {
+    open_string_note_.init_from_string( j["note"] );
+    max_fret_ = j["max_fret"];
+  }
+
 private:
   Note open_string_note_;
   signed char max_fret_ = 24;
@@ -81,6 +97,19 @@ GtrString::run_unit_tests(){
   s.set_max_fret( 25 );
   GTT_ASSERT( s.can_represent( Note( "Ab/7" )+1 ) );
   GTT_ASSERT( not s.can_represent( Note( "Ab/8" ) ) );
+
+  {//test serialization
+    json j;
+    GtrString const s1( "A/2", 22 );
+    s1.serialize( j );
+
+    //std::cout << j.dump() << std::endl;
+
+    GtrString s2( "Eb/3", 23 );
+    s2.deserialize( j );
+    GTT_ASSERT_EQUALS( s2.open_string_note_.as_int(), "A/2"_note.as_int() );
+    GTT_ASSERT_EQUALS( s2.max_fret_, 22 );
+  }
 }
 
 } // rep

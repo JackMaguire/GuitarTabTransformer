@@ -8,9 +8,6 @@
 
 #include <gtt/asserts.hh>
 
-//#include <nlohmann/json.hpp>
-//using json = nlohmann::json;
-
 namespace gtt {
 namespace rep {
 
