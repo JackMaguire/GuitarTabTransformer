@@ -27,6 +27,8 @@ namespace rep {
     HALF_TRIP
 };*/
 
+constexpr float EIGHTH = 1.0 / 8.0;
+
 struct MeasureNote {
   
   template<typename T>
@@ -40,6 +42,21 @@ struct MeasureNote {
     is_rest( rest ),
     starting_point( start ),
     length( l )
+  {}
+
+  template<typename T>
+  MeasureNote(
+    T const & t,
+    signed char const & str_assign,
+    float const start,
+    float const l,
+    bool const rest = false
+  ) :
+    note( t ),
+    is_rest( rest ),
+    starting_point( start ),
+    length( l ),
+    string_assignment( str_assign )
   {}
 
   template<typename T>
@@ -148,6 +165,16 @@ public:
 
   std::set< MeasureNote >
   compute_rests() const;
+
+  void
+  set( std::set< MeasureNote > && notes ){
+    notes_in_order_ = notes;
+  }
+
+  void
+  add( MeasureNote const & mn ) {
+    notes_in_order_.insert( mn );
+  }
 
 public: //serialization
   void

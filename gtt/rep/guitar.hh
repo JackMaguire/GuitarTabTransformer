@@ -42,6 +42,17 @@ public:
     return strings_.size()-1;//last string
   }
 
+public:
+  GtrString &
+  operator[]( int const i ) {
+    return strings_[ i ];
+  }
+
+  GtrString const &
+  operator[]( int const i ) const {
+    return strings_[ i ];
+  }
+
 public: //serialization
   void
   serialize( json & j ) const {
