@@ -5,6 +5,9 @@
 
 #include <vector>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 namespace gtt {
 namespace rep {
 
@@ -37,6 +40,26 @@ public:
       if( strings_[i].can_represent( note ) ) return i;
     }
     return strings_.size()-1;//last string
+  }
+
+public: //serialization
+  void
+  serialize( json & j ) const {
+    j[ "nstrings" ] = strings_.size();
+    for( unsigned int i = 0; i < strings_.size(); ++i ){
+      json j2;
+      strings_[ i ].serialize( j2 );
+      j[ std::to_string(i) ] = j2;
+    }
+  }
+
+  void
+  deserialize( json const & j ) {
+    strings_.resize( j[ "nstrings" ] );
+    for( unsigned int i = 0; i < strings_.size(); ++i ){
+      json const j2 = j[ std::to_string(i) ];
+      strings_[ i ].deserialize( j2 );
+    }
   }
 
 private:
@@ -128,6 +151,28 @@ public:
 
 void
 Guitar::run_unit_tests(){
+  {//test serialization
+    json j;
+    Guitar g1 = GuitarFactory::dropD_bass_guitar();
+    g1.serialize( j );
+
+    //std::cout << j.dump() << std::endl;
+
+    Guitar g2 = GuitarFactory::standard_seven_string_guitar();
+    g2.deserialize( j );
+
+    GTT_ASSERT_EQUALS( g2.strings_.size(), 4 );
+    GTT_ASSERT_EQUALS( g2.strings_[0].open_string_note().as_int(),
+      "G/2"_note.as_int() );
+    GTT_ASSERT_EQUALS( g2.strings_[1].open_string_note().as_int(),
+      "D/2"_note.as_int() );
+    GTT_ASSERT_EQUALS( g2.strings_[2].open_string_note().as_int(),
+      "A/1"_note.as_int() );
+    GTT_ASSERT_EQUALS( g2.strings_[3].open_string_note().as_int(),
+      "D/1"_note.as_int() );
+
+  }
+
 }
 
 } // rep
