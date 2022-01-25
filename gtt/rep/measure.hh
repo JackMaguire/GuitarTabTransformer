@@ -115,6 +115,10 @@ public:
   static
   void run_unit_tests();
 
+  auto size() const {
+    return notes_in_order_.size();
+  }
+
   MeasureNote const &
   operator[]( int const i ) const {
     return *std::next( notes_in_order_.begin(), i );
@@ -153,7 +157,6 @@ public: //serialization
 
   void
   deserialize( json const & j ) {
-
     notes_in_order_.clear();
 
     int const count = j[ "count" ];
@@ -165,7 +168,6 @@ public: //serialization
 
 
 private:
-  //std::vector< MeasureNote > notes_in_order_;
   std::set< MeasureNote > notes_in_order_; //inefficient but portable
 };
 
@@ -223,7 +225,7 @@ class Song {
 
 void
 Measure::run_unit_tests(){
-  { //simple construct test
+  { //simple construct and serialize test
     Measure const m({
 	MeasureNote( "Ab/5", 0.00, 0.25 ),
 	MeasureNote( "E/4",  0.25, 0.50 ),
@@ -233,6 +235,29 @@ Measure::run_unit_tests(){
     GTT_ASSERT_EQUALS( m[0].starting_point, 0.0 );
     GTT_ASSERT_EQUALS( m[1].starting_point, 0.25 );
     GTT_ASSERT_EQUALS( m[2].starting_point, 0.75 );
+
+    json j;
+    m.serialize( j );
+
+    Measure m2({
+	MeasureNote( "E/2",  0.25, 0.40 ),
+	MeasureNote( "Ab/1", 0.00, 0.45 ),
+      });
+    m2.deserialize( j );
+
+    GTT_ASSERT_EQUALS( m2.size(), 3 );
+    GTT_ASSERT_EQUALS( m2[0].starting_point, 0.0 );
+    GTT_ASSERT_EQUALS( m2[1].starting_point, 0.25 );
+    GTT_ASSERT_EQUALS( m2[2].starting_point, 0.75 );
+    GTT_ASSERT_EQUALS( m2[0].length, 0.25 );
+    GTT_ASSERT_EQUALS( m2[1].length, 0.50 );
+    GTT_ASSERT_EQUALS( m2[2].length, 0.25 );
+    GTT_ASSERT_EQUALS( m2[0].note.as_int(), "Ab/5"_note.as_int() );
+    GTT_ASSERT_EQUALS( m2[1].note.as_int(),  "E/4"_note.as_int() );
+    GTT_ASSERT_EQUALS( m2[2].note.as_int(), "Gb/6"_note.as_int() );
+
+    auto const & rests = m2.compute_rests();
+    GTT_ASSERT_EQUALS( rests.size(), 0 );
   }
 
   { //out of order test
