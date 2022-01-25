@@ -62,6 +62,10 @@ struct MeasureNote {
     deserialize( j );
   }
 
+  //MeasureNote() = default;
+
+
+
   bool
   operator< ( MeasureNote const & other ) const {
     return starting_point < other.starting_point;
@@ -108,6 +112,8 @@ struct MeasureNote {
 
 class Measure {
 public:
+  Measure() = default;
+
   Measure( std::set< MeasureNote > && notes ):
     notes_in_order_( notes )
   {}

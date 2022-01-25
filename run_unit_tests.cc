@@ -4,6 +4,7 @@
 #include "gtt/rep/gtrstring.hh"
 #include "gtt/rep/guitar.hh"
 #include "gtt/rep/measure.hh"
+#include "gtt/rep/track.hh"
 
 int main(){
   gtt::rep::Note::run_unit_tests();
