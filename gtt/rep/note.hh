@@ -8,6 +8,9 @@
 
 #include <gtt/asserts.hh>
 
+//#include <nlohmann/json.hpp>
+//using json = nlohmann::json;
+
 namespace gtt {
 namespace rep {
 
@@ -75,8 +78,14 @@ public:
   static
   void run_unit_tests();
 
-public: //mutators  
+public:
   void init_from_string( std::string const & notation );
+
+  std::string
+  as_string() const {
+    //either L/# (like A/2) or LL/# (Gb/4)
+    return letter2string( letter_ ) + '/' + char('0' + octave_);
+  }
 
   void init_from_int( signed char const i ){
     constexpr signed char n_notes_per_octave = 12;
@@ -89,6 +98,8 @@ public: //mutators
     constexpr signed char n_notes_per_octave = 12;
     return n_notes_per_octave*int(octave_) + int(letter_);
   }
+
+public:
 
   operator signed char() const{
     return as_int();
