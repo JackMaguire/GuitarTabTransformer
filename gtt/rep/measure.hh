@@ -44,7 +44,7 @@ struct MeasureNote {
     length( l )
   {}
 
-  template<typename T>
+  /*template<typename T>
   MeasureNote(
     T const & t,
     signed char const & str_assign,
@@ -57,7 +57,7 @@ struct MeasureNote {
     starting_point( start ),
     length( l ),
     string_assignment( str_assign )
-  {}
+  {}*/
 
   template<typename T>
   MeasureNote(
