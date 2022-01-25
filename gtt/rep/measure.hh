@@ -58,6 +58,10 @@ struct MeasureNote {
     string_assignment = guitar.highest_string_for_note( note );
   }
 
+  MeasureNote( json const & j ){
+    deserialize( j );
+  }
+
   bool
   operator< ( MeasureNote const & other ) const {
     return starting_point < other.starting_point;
@@ -138,20 +142,24 @@ public:
 public: //serialization
   void
   serialize( json & j ) const {
-    j[ "nstrings" ] = strings_.size();
-    for( unsigned int i = 0; i < strings_.size(); ++i ){
+    int count = 0;
+    for( MeasureNote const & mn : notes_in_order_ ){
       json j2;
-      strings_[ i ].serialize( j2 );
-      j[ std::to_string(i) ] = j2;
+      mn.serialize( j2 );
+      j[ std::to_string(count++) ] = j2;
     }
+    j[ "count" ] = count;
   }
 
   void
   deserialize( json const & j ) {
-    strings_.resize( j[ "nstrings" ] );
-    for( unsigned int i = 0; i < strings_.size(); ++i ){
+
+    notes_in_order_.clear();
+
+    int const count = j[ "count" ];
+    for( int i = 0; i < count; ++i ){
       json const j2 = j[ std::to_string(i) ];
-      strings_[ i ].deserialize( j2 );
+      notes_in_order_.emplace( j[ std::to_string(i) ] );
     }
   }
 
