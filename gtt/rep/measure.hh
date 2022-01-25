@@ -8,6 +8,9 @@
 #include <set>
 #include <map>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 namespace gtt {
 namespace rep {
 
@@ -65,7 +68,29 @@ struct MeasureNote {
     return starting_point + length;
   }
 
-  std::map< std::string, std::string > tags;
+  void
+  serialize( json & j ) const {
+    j[ "note" ] = note.as_string();
+    j[ "is_rest" ] = is_rest;
+    j[ "starting_point" ] = starting_point;
+    j[ "length" ] = length;
+    j[ "string_assignment" ] = int(string_assignment);
+  }
+
+  void
+  deserialize( json const & j ) {
+    note.init_from_string( j[ "note" ] );
+    is_rest = j[ "is_rest" ];
+    starting_point = j[ "starting_point" ];
+    length = j[ "length" ];
+    string_assignment = j[ "string_assignment" ];
+  }
+
+  /*
+    DATA
+   */
+
+  //std::map< std::string, std::string > tags;
   Note note;
   bool is_rest = false;
   
@@ -109,6 +134,27 @@ public:
 
   std::set< MeasureNote >
   compute_rests() const;
+
+public: //serialization
+  void
+  serialize( json & j ) const {
+    j[ "nstrings" ] = strings_.size();
+    for( unsigned int i = 0; i < strings_.size(); ++i ){
+      json j2;
+      strings_[ i ].serialize( j2 );
+      j[ std::to_string(i) ] = j2;
+    }
+  }
+
+  void
+  deserialize( json const & j ) {
+    strings_.resize( j[ "nstrings" ] );
+    for( unsigned int i = 0; i < strings_.size(); ++i ){
+      json const j2 = j[ std::to_string(i) ];
+      strings_[ i ].deserialize( j2 );
+    }
+  }
+
 
 private:
   //std::vector< MeasureNote > notes_in_order_;
