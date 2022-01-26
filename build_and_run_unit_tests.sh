@@ -26,3 +26,6 @@ libraries="$libraries -L/usr/lib/x86_64-linux-gnu/"
 cmd="g++-11 --std=c++2a -o run_unit_tests run_unit_tests.cc $opt $libraries $include -Wl,-rpath,. $WARN $DEBUG"
 echo $cmd
 $cmd
+
+echo ./run_unit_tests
+./run_unit_tests
