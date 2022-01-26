@@ -1,3 +1,6 @@
 [submodule "extern/json"]
 	path = extern/json
 	url = https://github.com/nlohmann/json.git
+[submodule "extern/wt"]
+	path = extern/wt
+	url = https://github.com/emweb/wt.git
