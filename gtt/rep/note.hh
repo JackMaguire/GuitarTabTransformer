@@ -3,8 +3,8 @@
 #include <string>
 #include <string_view>
 #include <iostream>
-#include <compare>
 #include <concepts>
+#include <compare>
 
 #include <gtt/asserts.hh>
 
