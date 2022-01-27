@@ -31,8 +31,8 @@ createApplication( Wt::WEnvironment const & env ) {
   app->setTitle( "Guitar Tab Transcriber" );
   app->root()->setStyleClass( "root" );
   
-  Wt::WBorderLayout * const border =
-    app->root()->setLayout( Wt::cpp14::make_unique< Wt::WBorderLayout >() );
+  // Wt::WBorderLayout * const border =
+  app->root()->setLayout( Wt::cpp14::make_unique< Wt::WBorderLayout >() );
 
   //auto score = Wt::cpp14::make_unique< ScoreWidget >( );
   //ScoreWidget * raw_score = &(*score);
