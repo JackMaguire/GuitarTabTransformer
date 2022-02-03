@@ -11,10 +11,10 @@ WARN="-Wall -Wshadow -Wunused -pedantic -Wextra"
 #WARN="$WARN -Wno-subobject-linkage"
 
 #DEBUG="-D_GLIBCXX_DEBUG"
-DEBUG="$DEBUG -g"
+#DEBUG="$DEBUG -g"
 
-opt="-O0"
-#opt="-O3"
+#opt="-O0"
+opt="-O3"
 
 include="$include -I ."
 include="$include -I extern/json/single_include/"
@@ -28,15 +28,10 @@ libraries="$libraries -Lextern/wt/build/src/http"
 libraries="$libraries -L/usr/lib/x86_64-linux-gnu/"
 libraries="$libraries -L."
 
-sos=""
-for x in *.so; do
-    sos="$sos -l:$x"
-done
-
 export LD_LIBRARY_PATH=".:extern/wt/build/src:extern/wt/build/src/http:/usr/lib/x86_64-linux-gnu/"
 
 mkdir bin 2>/dev/null
-cmd="g++-11 --std=c++14 -o bin/$app_name apps/${app_name}.cc $opt $libraries $include -Wl,-rpath,. $WARN $DEBUG -fPIC $sos"
+cmd="g++-11 --std=c++2a -o bin/$app_name apps/${app_name}.cc $opt $libraries $include -Wl,-rpath,. $WARN $DEBUG -fPIC"
 echo $cmd
 $cmd
 
