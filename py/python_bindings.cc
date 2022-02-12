@@ -113,5 +113,21 @@ PYBIND11_MODULE(gtt, m) {
     gtr.def( "__setitem__", [](Guitar& g, size_t index) { return &g[index];} );
     gtr.def( "serialize", &Guitar::serialize );
     gtr.def( "deserialize", &Guitar::deserialize );
-    
+
+
+
+
+    py::class_< GuitarFactory > gtr_factory( m, "GuitarFactory" );
+    gtr_factory.def( "standard_guitar", &GuitarFactory::standard_guitar );
+    gtr_factory.def( "dropD_guitar", &GuitarFactory::dropD_guitar );
+    gtr_factory.def( "standard_seven_string_guitar",
+      &GuitarFactory::standard_seven_string_guitar );
+
+    gtr_factory.def( "standard_bass_guitar", &GuitarFactory::standard_bass_guitar );
+    gtr_factory.def( "dropD_bass_guitar", &GuitarFactory::dropD_bass_guitar );
+    gtr_factory.def( "standard_five_string_bass_guitar",
+      &GuitarFactory::standard_five_string_bass_guitar );
+
+
+
 }
