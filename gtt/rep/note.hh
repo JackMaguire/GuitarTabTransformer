@@ -70,6 +70,10 @@ public:
     init_from_int( note );
   }
 
+  explicit Note( int const note ) {
+    init_from_int( note );
+  }
+
   Note( Note const & ) = default;
 
   static
