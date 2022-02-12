@@ -179,4 +179,14 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "serialize", &Measure::serialize );
     measure.def( "deserialize", &Measure::deserialize );
 
+
+    py::class_< Track > track( m, "Track" );
+    track.def( py::init<>() );
+
+    track.def_readwrite( "guitar", &Track::guitar );
+    track.def_readwrite( "measures", &Track::measures );
+
+    track.def( "serialize", &Track::serialize );
+    track.def( "deserialize", &Track::deserialize );
+
 }
