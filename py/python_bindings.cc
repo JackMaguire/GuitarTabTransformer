@@ -153,4 +153,19 @@ PYBIND11_MODULE(gtt, m) {
     mnote.def_readwrite( "starting_point", &MeasureNote::starting_point );
     mnote.def_readwrite( "length", &MeasureNote::length );
     mnote.def_readwrite( "string_assignment", &MeasureNote::string_assignment );
+
+
+
+
+    py::class_< Measure > measure( m, "Measure" );
+    measure.def( py::init<>() );
+    measure.def( py::init< std::set< MeasureNote > && >() );
+    measure.def( "run_unit_tests", &Measure::run_unit_tests );
+
+    measure.def( "size", &Measure::size );
+    measure.def( "__len__", &Measure::size );
+    measure.def("__iter__",
+      []( Measure & meas ) {
+	return py::make_iterator( meas.begin(), meas.end() );
+      });
 }
