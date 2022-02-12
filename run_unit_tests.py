@@ -1,6 +1,13 @@
 from gtt import *
 import gtt.shortcuts as X
 
+def run_X_unit_tests():
+    # Block 1
+    n = Note( "G/4" )
+
+    print( "Passed X Tests" )
+
+
 def run_note_unit_tests():
     # Block 1
     n = Note( "G/4" )
@@ -36,6 +43,28 @@ def run_note_unit_tests():
 
     print( "Passed Note Tests" )
     
+def run_GtrString_unit_tests():
+    s = GtrString( "Ab/5", 24 )
+    assert( s.get_fret( s.open_string_note() ) == 0 )
+    for i in range( -20, 21 ):
+        assert( s.get_fret( s.open_string_note()+i ) == i )
+
+    assert( not s.can_represent( Note( "Ab/4" ) ) );
+    assert( not s.can_represent( Note( "Ab/5" )-1 ) );
+    assert( s.can_represent( Note( "Ab/5" ) ) );
+    assert( s.can_represent( Note( "Ab/6" ) ) );
+    assert( s.can_represent( Note( "Ab/7" )-1 ) );
+    assert( s.can_represent( Note( "Ab/7" ) ) );
+    assert( not s.can_represent( Note( "Ab/7" )+1 ) );
+    assert( not s.can_represent( Note( "Ab/8" ) ) );
+
+    s.set_max_fret( 25 );
+    assert( s.can_represent( Note( "Ab/7" )+1 ) );
+    assert( not s.can_represent( Note( "Ab/8" ) ) );
+
+
+    print( "Passed GtrString Tests" )
 
 if __name__ == '__main__':
     run_note_unit_tests()
+    run_GtrString_unit_tests()

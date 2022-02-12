@@ -85,8 +85,11 @@ PYBIND11_MODULE(gtt, m) {
     py::class_< GtrString > gtr_str( m, "GtrString" );
     gtr_str.def( py::init<>() );
     gtr_str.def( py::init< int >() );
+    gtr_str.def( py::init< std::string >() );
     gtr_str.def( py::init< Note >() );
+
     gtr_str.def( py::init< int, int >() );
+    gtr_str.def( py::init< std::string, int >() );
     gtr_str.def( py::init< Note, int >() );
     
     gtr_str.def( "run_unit_tests", &GtrString::run_unit_tests );
