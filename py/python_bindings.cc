@@ -167,5 +167,16 @@ PYBIND11_MODULE(gtt, m) {
     measure.def("__iter__",
       []( Measure & meas ) {
 	return py::make_iterator( meas.begin(), meas.end() );
-      });
+      }, py::keep_alive<0, 1>() );
+    measure.def( "__getitem__",
+      []( Measure const & g, size_t index ) {return &g[index];}
+    );
+
+    measure.def( "compute_rests", &Measure::compute_rests );
+    measure.def( "set", &Measure::set );
+    measure.def( "add", &Measure::add );
+
+    measure.def( "serialize", &Measure::serialize );
+    measure.def( "deserialize", &Measure::deserialize );
+
 }
