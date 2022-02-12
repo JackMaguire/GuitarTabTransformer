@@ -14,19 +14,6 @@ using json = nlohmann::json;
 namespace gtt {
 namespace rep {
 
-/*enum class Duration : signed char {
-  WHOLE,
-    HALF,
-    QUARTER,
-    EIGHTH,
-
-  //triplet such that all 3 elements fit in the span of a quarter note
-    QUARTER_TRIP,
-
-  //triplet such that all 3 elements fit in the span of a half note    
-    HALF_TRIP
-};*/
-
 constexpr float EIGHTH = 1.0 / 8.0;
 
 struct MeasureNote {
@@ -43,21 +30,6 @@ struct MeasureNote {
     starting_point( start ),
     length( l )
   {}
-
-  /*template<typename T>
-  MeasureNote(
-    T const & t,
-    signed char const & str_assign,
-    float const start,
-    float const l,
-    bool const rest = false
-  ) :
-    note( t ),
-    is_rest( rest ),
-    starting_point( start ),
-    length( l ),
-    string_assignment( str_assign )
-  {}*/
 
   template<typename T>
   MeasureNote(

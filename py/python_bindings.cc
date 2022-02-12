@@ -130,4 +130,27 @@ PYBIND11_MODULE(gtt, m) {
 
 
 
+    py::class_< MeasureNote > mnote( m, "MeasureNote" );
+
+    mnote.def( py::init< Note const &, float, float >() );
+    mnote.def( py::init< Note const &, float, float, bool >() );
+    mnote.def( py::init< int, float, float >() );
+    mnote.def( py::init< int, float, float, bool >() );
+
+    mnote.def( py::init< Note const &, Guitar const &, float, float >() );
+    mnote.def( py::init< Note const &, Guitar const &, float, float, bool >() );
+    mnote.def( py::init< int, Guitar const &, float, float >() );
+    mnote.def( py::init< int, Guitar const &, float, float, bool >() );
+    mnote.attr( "EIGHTH" ) = py::float_( EIGHTH );
+
+    mnote.def( py::self <  py::self );
+    mnote.def( "ending_point", &MeasureNote::ending_point );
+    mnote.def( "serialize", &MeasureNote::serialize );
+    mnote.def( "deserialize", &MeasureNote::deserialize );
+
+    mnote.def_readwrite( "note", &MeasureNote::note );
+    mnote.def_readwrite( "is_rest", &MeasureNote::is_rest );
+    mnote.def_readwrite( "starting_point", &MeasureNote::starting_point );
+    mnote.def_readwrite( "length", &MeasureNote::length );
+    mnote.def_readwrite( "string_assignment", &MeasureNote::string_assignment );
 }
