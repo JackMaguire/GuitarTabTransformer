@@ -45,6 +45,8 @@ PYBIND11_MODULE(gtt, m) {
     note.def( py::init< Note const & >() );
 
     note.def( "run_unit_tests", &Note::run_unit_tests );
+    note.def( "letter", &Note::letter );
+    note.def( "octave", &Note::octave );
 
     note.def( "letter2string", &Note::letter2string );
     note.def( "string2letter", &Note::string2letter );

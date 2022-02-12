@@ -145,6 +145,10 @@ public:
     return letter_ == other.letter_ and octave_ == other.octave_;
   }
 
+public:
+  Letter letter() const{ return letter_; }
+  Octave octave() const{ return octave_; }
+
 private:
   Letter letter_;
   Octave octave_;
@@ -263,17 +267,11 @@ Note::run_unit_tests(){
     Note n( "Ab/0" );
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::Ab) );
     GTT_ASSERT_EQUALS( n.octave_, 0 );
+    GTT_ASSERT( n == "Ab/0"_note );
 
     n += 25; // A/2
     GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::A) );
     GTT_ASSERT_EQUALS( n.octave_, 2 );
-  }
-
-  {
-    Note n( "Ab/0" );
-    GTT_ASSERT_EQUALS( int(n.letter_), int(Letter::Ab) );
-    GTT_ASSERT_EQUALS( n.octave_, 0 );
-    GTT_ASSERT( n == "Ab/0"_note );
   }
 
   {
