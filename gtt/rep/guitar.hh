@@ -53,6 +53,10 @@ public:
     return strings_[ i ];
   }
 
+  auto size() const {
+    return strings_.size();
+  }
+
 public: //serialization
   void
   serialize( json & j ) const {

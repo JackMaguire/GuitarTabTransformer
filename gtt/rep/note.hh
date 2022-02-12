@@ -44,7 +44,7 @@ public:
   using Octave = signed char;
 
   /*
-    Steps
+    STEPS
    */
   using StepType = signed char;
   constexpr static StepType HalfStep = 1;

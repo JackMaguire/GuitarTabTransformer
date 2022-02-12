@@ -76,4 +76,42 @@ PYBIND11_MODULE(gtt, m) {
     note.def( py::self != py::self );
     note.def( py::self >= py::self );
     note.def( py::self >  py::self );
+
+    
+
+
+    py::class_< GtrString > gtr_str( m, "GtrString" );
+    gtr_str.def( py::init<>() );
+    gtr_str.def( py::init< int >() );
+    gtr_str.def( py::init< Note >() );
+    gtr_str.def( py::init< int, int >() );
+    gtr_str.def( py::init< Note, int >() );
+    
+    gtr_str.def( "run_unit_tests", &GtrString::run_unit_tests );
+    gtr_str.def( "get_fret", &GtrString::get_fret );
+    gtr_str.def( "can_represent", &GtrString::can_represent );
+    gtr_str.def( "open_string_note", &GtrString::open_string_note );
+    gtr_str.def( "set_open_string_note", &GtrString::set_open_string_note );
+    gtr_str.def( "max_fret", &GtrString::max_fret );
+    gtr_str.def( "set_max_fret", &GtrString::set_max_fret );
+    gtr_str.def( "serialize", &GtrString::serialize );
+    gtr_str.def( "deserialize", &GtrString::deserialize );
+
+
+
+
+    py::class_< Guitar > gtr( m, "Guitar" );
+    gtr.def( py::init<>() );
+    gtr.def( py::init< Guitar const & >() );
+    gtr.def( py::init< std::vector< std::string > const & >() );
+    
+    gtr.def( "run_unit_tests", &Guitar::run_unit_tests );
+    gtr.def( "highest_string_for_note", &Guitar::highest_string_for_note );
+    gtr.def( "size", &Guitar::size );
+    gtr.def( "__len__", &Guitar::size );
+    gtr.def( "__getitem__", [](Guitar const & g, size_t index) {return &g[index];} );
+    gtr.def( "__setitem__", [](Guitar& g, size_t index) { return &g[index];} );
+    gtr.def( "serialize", &Guitar::serialize );
+    gtr.def( "deserialize", &Guitar::deserialize );
+    
 }
