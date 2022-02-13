@@ -114,8 +114,8 @@ PYBIND11_MODULE(gtt, m) {
     gtr.def( "highest_string_for_note", &Guitar::highest_string_for_note );
     gtr.def( "size", &Guitar::size );
     gtr.def( "__len__", &Guitar::size );
-    //gtr.def( "__getitem__", [](Guitar const & g, size_t index) {return &g[index];} );
-    //gtr.def( "__setitem__", [](Guitar& g, size_t index) { return g[index];} );
+    gtr.def( "__getitem__", [](Guitar const & g, size_t index) {return g[index];} );
+    gtr.def( "__setitem__", [](Guitar& g, size_t index, GtrString const & gs ) { g[index] = gs;} );
     //gtr.def( "get_string", [](Guitar const & g, size_t index) -> GtrString & {return &g[index];} );
     gtr.def( "get_string", &Guitar::get_string );
     gtr.def( "serialize", &Guitar::serialize );

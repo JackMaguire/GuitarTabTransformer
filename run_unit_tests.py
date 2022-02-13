@@ -71,15 +71,28 @@ def run_Guitar_unit_tests():
     assert( g.size() == 4 );
     assert( len(g) == 4 );
 
-    assert( g.get_string(0).open_string_note().as_int() ==
-      Note("G/2").as_int() );
-    assert( g.get_string(1).open_string_note().as_int() ==
-      Note("D/2").as_int() );
-    assert( g.get_string(2).open_string_note().as_int() ==
-      Note("A/1").as_int() );
-    assert( g.get_string(3).open_string_note().as_int() ==
-      Note("D/1").as_int() );
+    assert( g[0].open_string_note().as_int() ==
+            Note("G/2").as_int() );
+    assert( g[1].open_string_note().as_int() ==
+            Note("D/2").as_int() );
+    assert( g[2].open_string_note().as_int() ==
+            Note("A/1").as_int() );
+    assert( g[3].open_string_note().as_int() ==
+            Note("D/1").as_int() );
 
+    assert( g.get_string(0).open_string_note().as_int() ==
+            Note("G/2").as_int() );
+    assert( g.get_string(1).open_string_note().as_int() ==
+            Note("D/2").as_int() );
+    assert( g.get_string(2).open_string_note().as_int() ==
+            Note("A/1").as_int() );
+    assert( g.get_string(3).open_string_note().as_int() ==
+            Note("D/1").as_int() );
+
+    g[3] = g[0]
+    assert( g[3].open_string_note().as_int() ==
+            Note("G/2").as_int() );
+    
     print( "Passed Guitar Tests" )
 
 if __name__ == '__main__':
