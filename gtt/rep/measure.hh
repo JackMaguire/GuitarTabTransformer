@@ -217,17 +217,6 @@ Measure::compute_rests() const {
   return rests;
 }
 
-/*struct TimeSignature {
-  signed char top    = 4;
-  signed char bottom = 4;
-};
-
-class Song {
-  std::vector< Measure > measures_;
-  //std::vector< GlobalAnnotation > global_annotations_;
-  TimeSignature time_signature_;
-};*/
-
 void
 Measure::run_unit_tests(){
   { //simple construct and serialize test

@@ -143,11 +143,16 @@ PYBIND11_MODULE(gtt, m) {
     mnote.def( py::init< Note const &, float, float, bool >() );
     mnote.def( py::init< int, float, float >() );
     mnote.def( py::init< int, float, float, bool >() );
+    mnote.def( py::init< std::string, float, float >() );
+    mnote.def( py::init< std::string, float, float, bool >() );
 
     mnote.def( py::init< Note const &, Guitar const &, float, float >() );
     mnote.def( py::init< Note const &, Guitar const &, float, float, bool >() );
     mnote.def( py::init< int, Guitar const &, float, float >() );
     mnote.def( py::init< int, Guitar const &, float, float, bool >() );
+    mnote.def( py::init< std::string, Guitar const &, float, float >() );
+    mnote.def( py::init< std::string, Guitar const &, float, float, bool >() );
+
     mnote.attr( "EIGHTH" ) = py::float_( EIGHTH );
 
     mnote.def( py::self <  py::self );
@@ -163,7 +168,6 @@ PYBIND11_MODULE(gtt, m) {
 
 
 
-
     py::class_< Measure > measure( m, "Measure" );
     measure.def( py::init<>() );
     measure.def( py::init< std::set< MeasureNote > && >() );
@@ -176,7 +180,7 @@ PYBIND11_MODULE(gtt, m) {
 	return py::make_iterator( meas.begin(), meas.end() );
       }, py::keep_alive<0, 1>() );
     measure.def( "__getitem__",
-      []( Measure const & g, size_t index ) {return &g[index];}
+      []( Measure const & g, size_t index ) {return g[index];}
     );
 
     measure.def( "compute_rests", &Measure::compute_rests );

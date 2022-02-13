@@ -8,7 +8,7 @@ def run_X_unit_tests():
     print( "Passed X Tests" )
 
 
-def run_note_unit_tests():
+def run_Note_unit_tests():
     # Block 1
     n = Note( "G/4" )
     assert( n.letter() == NoteLetter.G )
@@ -95,7 +95,20 @@ def run_Guitar_unit_tests():
     
     print( "Passed Guitar Tests" )
 
+
+def run_Measure_unit_tests():
+    # Block 1
+    m = Measure({
+	MeasureNote( "Ab/5", 0.00, 0.25 ),
+	MeasureNote( "E/4",  0.25, 0.50 ),
+	MeasureNote( "Gb/6", 0.75, 0.25 )        
+    })
+    assert( m[0].starting_point == 0 )
+
+    print( "Passed Measure Tests" )
+
 if __name__ == '__main__':
-    run_note_unit_tests()
+    run_Note_unit_tests()
     run_GtrString_unit_tests()
     run_Guitar_unit_tests()
+    run_Measure_unit_tests()
