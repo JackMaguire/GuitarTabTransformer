@@ -44,6 +44,11 @@ public:
 
 public:
   GtrString &
+  get_string( int const i ) {
+    return strings_[ i ];
+  }
+
+  GtrString &
   operator[]( int const i ) {
     return strings_[ i ];
   }
