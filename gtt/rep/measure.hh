@@ -57,7 +57,16 @@ struct MeasureNote {
 
   bool
   operator< ( MeasureNote const & other ) const {
-    return starting_point < other.starting_point;
+    if( starting_point != other.starting_point )
+      return starting_point < other.starting_point;
+
+    if( length != other.length )
+      return length < other.length;
+
+    if( note != other.note )
+      return note < other.note;
+
+    return string_assignment < other.string_assignment;
   }
 
   float

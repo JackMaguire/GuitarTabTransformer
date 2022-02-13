@@ -105,11 +105,15 @@ def run_Measure_unit_tests_5():
 	MeasureNote( "Gb/6", 0.75, 0.25 )
     })
 
+    #for i in range( 0, len(m) ):
+    #    print( i, m[i].note )
+
+    assert( len(m) == 4 )
+
     rests5 = m.compute_rests()
     assert( len(rests5) == 1 )
 
     rest5 = list(rests5)[0]
-    print( rest5.starting_point )
     assert( rest5.starting_point == 0.5 );
     assert( rest5.length == 0.25 );
     assert( rest5.ending_point() == 0.75 );
