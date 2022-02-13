@@ -57,6 +57,9 @@ def main( stdscr ):
     
 
 if __name__ == '__main__':
+    t = Track( "example_songs/spirited_away_intro.json" )
+    print( t )
+
     stdscr = curses.initscr()
     curses.noecho()
     curses.cbreak()

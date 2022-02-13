@@ -193,11 +193,15 @@ PYBIND11_MODULE(gtt, m) {
 
     py::class_< Track > track( m, "Track" );
     track.def( py::init<>() );
+    track.def( py::init< Track const & >() );
+    track.def( py::init< std::string >() );
 
     track.def_readwrite( "guitar", &Track::guitar );
     track.def_readwrite( "measures", &Track::measures );
 
-    track.def( "serialize", &Track::serialize );
-    track.def( "deserialize", &Track::deserialize );
+    //track.def( "serialize", &Track::serialize );
+    // track.def( "deserialize", &Track::deserialize );
+    track.def( "save_to_file", &Track::save_to_file );
+    track.def( "load_from_file", &Track::load_from_file );
 
 }

@@ -20,4 +20,5 @@ int main(){
   json j;
   t.serialize( j );
   std::cout << j.dump() << std::endl;
+  t.save_to_file( "example_songs/spirited_away_intro.json" );
 }

@@ -6,6 +6,7 @@
 
 //#include <string>
 #include <vector>
+#include <fstream>
 //#include <set>
 //#include <map>
 
@@ -16,6 +17,21 @@ namespace gtt {
 namespace rep {
 
 struct Track {
+
+  Track() = default;
+  Track( Track const & ) = default;
+  Track( std::string const & filename ){
+    load_from_file( filename );
+  }
+
+  void
+  save_to_file( std::string const & filename ) const {
+    json j;
+    serialize( j );
+
+    std::ofstream file( filename );
+    file << j;
+  }
 
   void
   serialize( json & j ) const {
@@ -29,6 +45,13 @@ struct Track {
       measures[i].serialize( mj );
       j[ std::to_string(i) ] = mj;
     }
+  }
+
+  void
+  load_from_file( std::string const & filename ) {
+    std::ifstream ifs( filename );
+    json j = json::parse(ifs);
+    deserialize( j );
   }
 
   void
