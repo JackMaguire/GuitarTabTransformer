@@ -52,7 +52,8 @@ def draw_measure(
     end_y = start_y + g.size()
     for x in range( start_x, end_x ):
         for y in range( start_y, end_y ):
-            stdscr.addch( y, x, '-', curses.color_pair(84) )
+            #stdscr.addch( y, x, '-', curses.color_pair(84) )
+            stdscr.addch( y, x, '-' )
 
 def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
     count = 0
