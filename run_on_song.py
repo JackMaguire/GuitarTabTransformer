@@ -55,7 +55,7 @@ def draw_measure(
     end_y = start_y + g.size()
     for x in range( start_x, end_x ):
         for y in range( start_y, end_y ):
-            stdscr.addch( y, x, '-' )
+            stdscr.addch( y, x, '-', curses.color_pair(246) )
 
     ############
     # draw notes
@@ -65,6 +65,16 @@ def draw_measure(
         x = start_x + settings.measure_buffer + int( settings.active_measure_width * note.starting_point )
         fret = g.get_string( note.string_assignment ).get_fret( note.note )
         stdscr.addstr( y, x, str(fret) )
+
+
+    ############
+    # draw rests
+    rests = m.compute_rests()
+    for r in rests:
+        #y = start_y + note.string_assignment
+        x = start_x + settings.measure_buffer + int( settings.active_measure_width * r.starting_point )
+        #fret = g.get_string( note.string_assignment ).get_fret( note.note )
+        #stdscr.addstr( y, x, str(fret) )
 
 def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
     count = 0
@@ -138,7 +148,8 @@ if __name__ == '__main__':
     curses.start_color()
     curses.use_default_colors()
     for i in range(0, curses.COLORS):
-        curses.init_pair(i + 1, curses.COLOR_BLACK, i)
+        #curses.init_pair(i + 1, curses.COLOR_BLACK, i)
+        curses.init_pair(i + 1, i, -1)
 
     wrapper(main)
 
