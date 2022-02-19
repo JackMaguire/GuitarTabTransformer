@@ -46,14 +46,25 @@ def draw_measure(
         m_ind: int,
         settings: Settings
 ):
+    #################
+    # draw background
+
     start_x, start_y = measure_ind_to_xy( m_ind, settings, g )
-    print( m_ind, start_x, start_y )
+    #print( m_ind, start_x, start_y )
     end_x = start_x + settings.total_measure_width
     end_y = start_y + g.size()
     for x in range( start_x, end_x ):
         for y in range( start_y, end_y ):
-            #stdscr.addch( y, x, '-', curses.color_pair(84) )
             stdscr.addch( y, x, '-' )
+
+    ############
+    # draw notes
+    for i in range( 0, len(m) ):
+        note = m[i]
+        y = start_y + note.string_assignment
+        x = start_x + settings.measure_buffer + int( settings.active_measure_width * note.starting_point )
+        fret = g.get_string( note.string_assignment ).get_fret( note.note )
+        stdscr.addstr( y, x, str(fret) )
 
 def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
     count = 0
@@ -77,7 +88,7 @@ def main( stdscr ):
 
     draw_track( stdscr, track, writer_cursor, settings )
     #stdscr.refresh()
-    #time.sleep( 10 )
+    time.sleep( 10 )
 
     while True:
         stdscr.refresh()
