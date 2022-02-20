@@ -4,6 +4,7 @@ from gtt import *
 from py.settings import Settings
 
 import curses
+from curses.textpad import rectangle
 
 def draw_text_at_top(
         stdscr,
@@ -98,7 +99,8 @@ def draw_measure(
             for y in range( start_y, end_y ):
                 stdscr.addch( y, x, '~' )
 
-def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
+
+def draw_track( stdscr, track, cursor, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
     rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
