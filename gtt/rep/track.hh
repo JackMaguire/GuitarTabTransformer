@@ -16,6 +16,16 @@ using json = nlohmann::json;
 namespace gtt {
 namespace rep {
 
+struct TimeSignature {
+  unsigned char top    = 4;
+  unsigned char bottom = 4;
+
+  unsigned char
+  beats_per_measure() const {
+    return top;
+  }
+}
+
 struct Track {
 
   Track() = default;
@@ -45,6 +55,9 @@ struct Track {
       measures[i].serialize( mj );
       j[ std::to_string(i) ] = mj;
     }
+
+    j[ "time_signature_top" ] = time_signature.top;
+    j[ "time_signature_bottom" ] = time_signature.bottom;
   }
 
   void
@@ -63,10 +76,19 @@ struct Track {
     for( unsigned int i = 0; i < measures.size(); ++i ){
       measures[ i ].deserialize( j[ std::to_string(i) ] );
     }
+
+    if( j.contains("time_signature_top") ){
+      time_signature.top = j[ "time_signature_top" ];
+    }
+
+    if( j.contains("time_signature_bottom") ){
+      time_signature.bottom = j[ "time_signature_bottom" ];
+    }
   }
 
   Guitar guitar = GuitarFactory::standard_guitar();
   std::vector< Measure > measures;
+  TimeSignature time_signature;
 };
 
 } // rep
