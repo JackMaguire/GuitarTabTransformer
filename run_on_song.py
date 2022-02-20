@@ -26,7 +26,7 @@ class Settings:
         x = x - self.measure_buffer
 
         if x >= self.active_measure_width: return False
-        
+
         return x % self.beat_size == 0
 
 class Cursor:
@@ -51,7 +51,7 @@ def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
 
     return x, y, newline
 
-    
+
 
 def draw_measure(
         stdscr,
@@ -149,50 +149,42 @@ def main( stdscr ):
         if k in ( 'Q', 'q' ):
             y, x = stdscr.getyx()
             x -= 1
-            y += 1
+            y -= 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'W', 'w' ):
             y, x = stdscr.getyx()
-            y += 1
+            y -= 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'E', 'e' ):
             y, x = stdscr.getyx()
             x += 1
-            y += 1
+            y -= 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'A', 'a' ):
             y, x = stdscr.getyx()
             x -= 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'S', 's' ):
             pass
         elif k in ( 'D', 'd' ):
             y, x = stdscr.getyx()
             x += 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'Z', 'z' ):
             y, x = stdscr.getyx()
             x -= 1
-            y -= 1
+            y += 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'X', 'x' ):
             y, x = stdscr.getyx()
-            y -= 1
+            y += 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
         elif k in ( 'C', 'c' ):
             y, x = stdscr.getyx()
             x += 1
-            y -= 1
+            y += 1
             moveto( y, x )
-            #draw_game( stdscr, game, show_pocket )
-    
+
 
 if __name__ == '__main__':
     #t = Track( "example_songs/spirited_away_intro.json" )
