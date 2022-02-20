@@ -146,12 +146,20 @@ def main( stdscr ):
         stdscr.refresh()
         k = stdscr.get_wch()
 
+        #print( k )
+        #time.sleep( 10 )
+
+        down = 258
+        up = 259
+        left = 260
+        right = 261
+
         if k in ( 'Q', 'q' ):
             y, x = stdscr.getyx()
             x -= 1
             y -= 1
             moveto( y, x )
-        elif k in ( 'W', 'w' ):
+        elif k in ( 'W', 'w', up ):
             y, x = stdscr.getyx()
             y -= 1
             moveto( y, x )
@@ -160,13 +168,13 @@ def main( stdscr ):
             x += 1
             y -= 1
             moveto( y, x )
-        elif k in ( 'A', 'a' ):
+        elif k in ( 'A', 'a', left ):
             y, x = stdscr.getyx()
             x -= 1
             moveto( y, x )
         elif k in ( 'S', 's' ):
             pass
-        elif k in ( 'D', 'd' ):
+        elif k in ( 'D', 'd', right ):
             y, x = stdscr.getyx()
             x += 1
             moveto( y, x )
@@ -175,7 +183,7 @@ def main( stdscr ):
             x -= 1
             y += 1
             moveto( y, x )
-        elif k in ( 'X', 'x' ):
+        elif k in ( 'X', 'x', down ):
             y, x = stdscr.getyx()
             y += 1
             moveto( y, x )
