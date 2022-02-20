@@ -4,30 +4,11 @@ import gtt.shortcuts as X
 
 import curses
 from curses import wrapper
+from curses.textpad import Textbox, rectangle
 
 import time
 
-class Settings:
-    def __init__(self, track: gtt.Track):
-        self.measure_buffer = 0
-        self.active_measure_width = 8 * track.time_signature.beats_per_measure()
-        self.total_measure_width = self.active_measure_width+(2*self.measure_buffer)
-
-        self.m_per_row = 3
-        self.row_gap = 3
-
-        self.x_gap = 6
-
-        self.beat_size = self.active_measure_width / track.time_signature.beats_per_measure()
-
-    def x_is_beat( self, x ):
-        if x < self.measure_buffer: return False
-
-        x = x - self.measure_buffer
-
-        if x >= self.active_measure_width: return False
-
-        return x % self.beat_size == 0
+from py.settings import Settings
 
 class Cursor:
     def __init__(self):
@@ -39,6 +20,24 @@ def close( stdscr ):
     stdscr.keypad(False)
     curses.echo()
     curses.endwin()
+
+def make_edit_window( stdscr ):
+    editwin = curses.newwin(5,30, 2,1)
+    rectangle(stdscr, 1,0, 1+5+1, 1+30+1)
+    stdscr.refresh()
+
+    box = Textbox(editwin)
+
+    # Let the user edit until Ctrl-G is struck.
+    box.edit()
+
+    # Get resulting contents
+    message = box.gather()
+
+    del editwin
+    stdscr.touchwin()
+
+    return message
 
 def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
     j_offset = int( index / settings.m_per_row )
@@ -58,9 +57,11 @@ def draw_text_at_top(
         settings: Settings
 ):
     text_color = curses.color_pair(242)
+    
     y = 1
     x = settings.x_gap
 
+    # Time Signature
     ts_top_str = str(track.time_signature.top)
     stdscr.addstr( y, x, ts_top_str, text_color )
     x += len(ts_top_str)
@@ -70,7 +71,12 @@ def draw_text_at_top(
 
     ts_bottom_str = str(track.time_signature.bottom)
     stdscr.addstr( y, x, ts_bottom_str, text_color )
-    x += len(ts_bottom_str)
+    x += len(ts_bottom_str) + 2
+
+    # Key
+    key_str = track.key_str()
+    stdscr.addstr( y, x, key_str, text_color )
+    x += len(key_str) + 4
 
 def draw_measure(
         stdscr,
@@ -126,6 +132,9 @@ def draw_measure(
                 stdscr.addch( y, x, '~' )
 
 def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
+    maxy, maxx = stdscr.getmaxyx()
+    rectangle(stdscr, 0, 0, maxy-2, maxx-1)
+
     draw_text_at_top( stdscr, track, settings )
 
     count = 0
@@ -163,6 +172,7 @@ def main( stdscr ):
 
     while True:
         c_pos = stdscr.getyx()
+        stdscr.clear()
         draw_track( stdscr, track, writer_cursor, settings )
         moveto( *c_pos )
 
@@ -196,6 +206,9 @@ def main( stdscr ):
             x -= 1
             moveto( y, x )
         elif k in ( 'S', 's' ):
+            #s = make_edit_window( stdscr )
+            #x = int( s )
+            #moveto( 10, x )
             pass
         elif k in ( 'D', 'd', right ):
             y, x = stdscr.getyx()

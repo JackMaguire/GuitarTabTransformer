@@ -58,6 +58,8 @@ struct Track {
 
     j[ "time_signature_top" ] = time_signature.top;
     j[ "time_signature_bottom" ] = time_signature.bottom;
+
+    j[ "major_key" ] = Note::letter2string( major_key );
   }
 
   void
@@ -84,11 +86,17 @@ struct Track {
     if( j.contains("time_signature_bottom") ){
       time_signature.bottom = j[ "time_signature_bottom" ];
     }
+
+    if( j.contains("major_key") ){
+      std::string const major_key_str = j[ "major_key" ];
+      major_key = Note::string2letter( std::string_view( major_key_str ) );
+    }
   }
 
   Guitar guitar = GuitarFactory::standard_guitar();
   std::vector< Measure > measures;
   TimeSignature time_signature;
+  Note::Letter major_key = Note::Letter::C;
 };
 
 } // rep

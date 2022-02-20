@@ -205,6 +205,10 @@ PYBIND11_MODULE(gtt, m) {
     track.def_readwrite( "guitar", &Track::guitar );
     track.def_readwrite( "measures", &Track::measures );
     track.def_readwrite( "time_signature", &Track::time_signature );
+    track.def_readwrite( "major_key", &Track::major_key );
+
+    track.def( "key_str",
+      [](Track const & t){ return Note::letter2string(t.major_key); } );
 
     //track.def( "serialize", &Track::serialize );
     // track.def( "deserialize", &Track::deserialize );

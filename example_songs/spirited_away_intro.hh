@@ -13,6 +13,10 @@ spirited_away_intro(){
   t.guitar = GuitarFactory::standard_guitar();
   Guitar const & gtr = t.guitar;
 
+  t.time_signature.top = 4;
+  t.time_signature.bottom = 4;
+  t.major_key = Note::Letter::G;
+
   t.measures.resize( 4 );
 
   //Notes
