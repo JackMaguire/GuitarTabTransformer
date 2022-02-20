@@ -8,17 +8,17 @@ from curses import wrapper
 import time
 
 class Settings:
-    def __init__(self):
+    def __init__(self, track: gtt.Track):
         self.measure_buffer = 0
-        self.active_measure_width = 32
+        self.active_measure_width = 8 * track.time_signature.beats_per_measure()
         self.total_measure_width = self.active_measure_width+(2*self.measure_buffer)
 
         self.m_per_row = 3
         self.row_gap = 3
 
-        self.x_gap = 5
+        self.x_gap = 6
 
-        self.beat_size = self.active_measure_width / 4
+        self.beat_size = self.active_measure_width / track.time_signature.beats_per_measure()
 
     def x_is_beat( self, x ):
         if x < self.measure_buffer: return False
@@ -52,6 +52,25 @@ def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
     return x, y, newline
 
 
+def draw_text_at_top(
+        stdscr,
+        track: gtt.Track,
+        settings: Settings
+):
+    text_color = curses.color_pair(242)
+    y = 1
+    x = settings.x_gap
+
+    ts_top_str = str(track.time_signature.top)
+    stdscr.addstr( y, x, ts_top_str, text_color )
+    x += len(ts_top_str)
+
+    stdscr.addch( y, x, '/', text_color )
+    x += 1
+
+    ts_bottom_str = str(track.time_signature.bottom)
+    stdscr.addstr( y, x, ts_bottom_str, text_color )
+    x += len(ts_bottom_str)
 
 def draw_measure(
         stdscr,
@@ -81,8 +100,10 @@ def draw_measure(
     if is_newline:
         for i in range( 0, g.size() ):
             y = start_y + i
-            x = 1
+            x = 2
             s = g.get_string(i).open_string_note().as_string()
+            if len(s) > 3:
+                x = 1
             stdscr.addstr( y, x, s, noteless_color )
 
     ############
@@ -105,6 +126,8 @@ def draw_measure(
                 stdscr.addch( y, x, '~' )
 
 def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
+    draw_text_at_top( stdscr, track, settings )
+
     count = 0
     g = track.guitar
     for m in track.measures:
@@ -117,10 +140,10 @@ def main( stdscr ):
     stdscr.clear()
     stdscr.border(0)
 
-    writer_cursor = Cursor()
-    settings = Settings()
-
     track = Track( "example_songs/spirited_away_intro.json" )
+
+    writer_cursor = Cursor()
+    settings = Settings( track )
 
     #draw_track( stdscr, track, writer_cursor, settings )
     #stdscr.refresh()

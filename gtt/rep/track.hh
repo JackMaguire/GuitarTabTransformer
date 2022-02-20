@@ -24,7 +24,7 @@ struct TimeSignature {
   beats_per_measure() const {
     return top;
   }
-}
+};
 
 struct Track {
 

@@ -191,6 +191,12 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "deserialize", &Measure::deserialize );
 
 
+    py::class_< TimeSignature > ts( m, "TimeSignature" );
+    ts.def_readwrite( "top", &TimeSignature::top );
+    ts.def_readwrite( "bottom", &TimeSignature::bottom );
+    ts.def( "beats_per_measure", &TimeSignature::beats_per_measure );
+
+
     py::class_< Track > track( m, "Track" );
     track.def( py::init<>() );
     track.def( py::init< Track const & >() );
@@ -198,6 +204,7 @@ PYBIND11_MODULE(gtt, m) {
 
     track.def_readwrite( "guitar", &Track::guitar );
     track.def_readwrite( "measures", &Track::measures );
+    track.def_readwrite( "time_signature", &Track::time_signature );
 
     //track.def( "serialize", &Track::serialize );
     // track.def( "deserialize", &Track::deserialize );
