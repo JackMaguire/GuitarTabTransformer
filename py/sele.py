@@ -7,7 +7,7 @@ import curses
 from curses.textpad import rectangle
 
 class Selection:
-    def __init__( self ):
+    def __init__( self, stdscr ):
         self.selected_objects = []
         self.y, self.x = stdscr.getyx()
 
@@ -18,9 +18,16 @@ class Selection:
     def clear_objs( self ):
         self.selected_objects = []
 
+    def start_box( self ):
+        self.box_y = self.y
+        self.box_x = self.x
+
     def clear_box( self ):
         self.box_y = None
         self.box_x = None
+
+    def register_move( self, stdscr ):
+        self.y, self.x = stdscr.getyx()
 
     def maybe_select( self, obj, y, x ) -> bool:
         if self.box_y == None or self.box_x == None:
