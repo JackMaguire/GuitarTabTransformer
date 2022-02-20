@@ -9,7 +9,7 @@ from curses.textpad import Textbox, rectangle
 import time
 
 from py.settings import Settings
-from py.draw import draw_text_at_top, draw_measure
+from py.draw import draw_track
 
 class Cursor:
     def __init__(self):
@@ -40,19 +40,6 @@ def make_edit_window( stdscr ):
 
     return message
 
-
-def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
-    maxy, maxx = stdscr.getmaxyx()
-    rectangle(stdscr, 0, 0, maxy-2, maxx-1)
-
-    draw_text_at_top( stdscr, track, settings )
-
-    count = 0
-    g = track.guitar
-    for m in track.measures:
-        #print( count, m )
-        draw_measure( stdscr, m, g, count, settings )
-        count += 1
 
 def main( stdscr ):
     # Clear screen

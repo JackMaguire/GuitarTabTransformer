@@ -97,3 +97,17 @@ def draw_measure(
             x = start_x + settings.measure_buffer + int( settings.active_measure_width * r.starting_point )
             for y in range( start_y, end_y ):
                 stdscr.addch( y, x, '~' )
+
+def draw_track( stdscr, track, cursor: Cursor, settings: Settings ):
+    maxy, maxx = stdscr.getmaxyx()
+    rectangle(stdscr, 0, 0, maxy-2, maxx-1)
+
+    draw_text_at_top( stdscr, track, settings )
+
+    count = 0
+    g = track.guitar
+    for m in track.measures:
+        #print( count, m )
+        draw_measure( stdscr, m, g, count, settings )
+        count += 1
+
