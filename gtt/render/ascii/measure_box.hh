@@ -26,22 +26,21 @@ struct MeasureBoxSettings {
   beat_positions() const {
     std::vector< int > beats;
     beats.reserve( time_sig.beats_per_measure() );
-
     int const beat_size = measure_width / time_sig.beats_per_measure();
     for( int i = 0; i < time_sig.beats_per_measure(); ++i ){
       beats.push_back( i * beat_size );
     }
-
     return beats;
   }
+
 };
 
 class MeasureBox {
 public:
   
   struct CharVal {
-    char c;
     int color;
+    char c;
   };
 
   MeasureBox(
@@ -50,6 +49,22 @@ public:
     MeasureBoxSettings const & settings
   ){
     initialize( measure, g, settings );
+  }
+
+  int width() const {
+    if( render_.empty() ) return 0;
+    return render_[0].size();
+  }
+
+  int height() const {
+    return render_.size();
+  }
+
+  CharVal
+  at( int const x, int const y ) const {
+    GTT_ASSERT( x >= 0 and x < width() );
+    GTT_ASSERT( y >= 0 and y < height() );
+    return render_[ y ][ x ];
   }
 
 protected:

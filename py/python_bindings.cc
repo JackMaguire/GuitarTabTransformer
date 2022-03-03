@@ -9,6 +9,8 @@
 #include "gtt/rep/track.hh"
 #include "gtt/asserts.hh"
 
+#include "gtt/render/ascii/measure_box.hh"
+
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
 #include <pybind11/stl.h>
@@ -215,4 +217,27 @@ PYBIND11_MODULE(gtt, m) {
     track.def( "save_to_file", &Track::save_to_file );
     track.def( "load_from_file", &Track::load_from_file );
 
+
+    py::module render = m.def_submodule( "render" );
+    py::module ascii = render.def_submodule( "ascii" );
+
+    {
+      using namespace gtt::render::ascii;
+
+      py::class_< MeasureBoxSettings > mboxset( ascii, "MeasureBoxSettings" );
+      mboxset.def( py::init<>() );
+      mboxset.def_readwrite( "measure_width", &MeasureBoxSettings::measure_width );
+      mboxset.def_readwrite( "time_sig", &MeasureBoxSettings::time_sig );
+      mboxset.def( "x_is_beat", &MeasureBoxSettings::x_is_beat );
+      mboxset.def( "beat_positions", &MeasureBoxSettings::beat_positions );
+
+      py::class_< MeasureBox::CharVal > mboxcv( ascii, "MeasureBoxCharVal" );
+      mboxcv.def( py::init<>() );
+      mboxcv.def_readwrite( "color", &MeasureBox::CharVal::color );
+      mboxcv.def_readwrite( "char", &MeasureBox::CharVal::c );
+
+      py::class_< MeasureBox > mbox( ascii, "MeasureBox" );
+      mbox.def( py::init< gtt::rep::Measure *, gtt::rep::Guitar const &, MeasureBoxSettings const & >() );
+      mbox.def( "at", &MeasureBox::at );
+    }
 }
