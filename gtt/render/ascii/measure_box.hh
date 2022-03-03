@@ -39,6 +39,8 @@ class MeasureBox {
 public:
   
   struct CharVal {
+    //constexpr ~CharVal() = default;
+
     int color;
     char c;
   };
@@ -88,28 +90,28 @@ MeasureBox::initialize(
   rep::Guitar const & g,
   MeasureBoxSettings const & settings
 ) {
-  using MeasureBox::CharVal;
+  //using CharVal = MeasureBox::CharVal;
 
   measure_ = measure;
   settings_ = settings;
 
   // create empty string
-  constexpr CharVal empty_note({ '-', 242 });
-  constexpr std::vector empty_string( settings_.measure_width, empty_note );
+  CharVal const empty_note({ 242, '-' });
+  std::vector const empty_string( settings_.measure_width, empty_note );
   render_.resize( g.size(), empty_string );
 
   // color the beats
-  for( int const x : settings_->beat_positions() ){
-    for( int y = 0; y < g.size(); ++y ){
+  for( int const x : settings_.beat_positions() ){
+    for( uint y = 0; y < g.size(); ++y ){
       render_[y][x].color = 252;
     }
   }
 
   // draw notes
-  for( MeasureNote const & mnote : *measure ){
+  for( rep::MeasureNote const & mnote : *measure ){
     int const y = mnote.string_assignment;
-    int const x = int( settings_->measure_width * mnote.starting_point );
-    int const fret = g.get_string( y ).get_fret( mnote.note );
+    int const x = int( settings_.measure_width * mnote.starting_point );
+    int const fret = g[ y ].get_fret( mnote.note );
     std::string const fret_str = std::to_string( fret );
     if( fret_str.size() == 1 ){
       render_[y][x].c = fret_str[ 0 ];
