@@ -45,7 +45,7 @@ public:
   struct CharVal {
     //constexpr ~CharVal() = default;
 
-    int color;
+    int color = 0;
     char c;
   };
 
@@ -116,15 +116,11 @@ MeasureBox::initialize(
   }
 
   // draw notes
-  std::cout << "!!!" << std::endl;
   for( rep::MeasureNote const & mnote : *measure ){
-    std::cout << "!!!?" << std::endl;
     int const y = mnote.string_assignment;
     int const x = int( settings_.measure_width * mnote.starting_point );
     int const fret = g[ y ].get_fret( mnote.note );
     std::string const fret_str = std::to_string( fret );
-
-    std::cout << "!! " << fret_str << std::endl;
 
     if( fret_str.size() == 1 ){
       render_[y][x].c = fret_str[ 0 ];
@@ -169,14 +165,23 @@ MeasureBox::run_unit_tests(){
 
     GTT_ASSERT_EQUALS( t.measures[0].size(), 7 );
 
-    { //line 0
-      std::string const line0 = "----------------------------0---";
-      GTT_ASSERT_EQUALS( int(line0.size()), mbox.width() );
+    auto && tester = [&]( int const str, std::string const & line ){ //line 0
+      GTT_ASSERT_EQUALS( int(line.size()), mbox.width() );
       for( int i = 0; i < mbox.width(); ++i ){
-	std::cout << line0[i] << " " << mbox.at( i, 0 ).c << std::endl;
-	GTT_ASSERT_EQUALS( line0[i], mbox.at( i, 0 ).c );
+	//std::cout << line[i] << " " << mbox.at( i, 0 ).c << std::endl;
+	GTT_ASSERT_EQUALS( line[i], mbox.at( i, str ).c );
+	if( mbox.at( i, str ).c != '-' ){
+	  
+	}
       }
-    }
+    };
+
+    tester( 0, "----------------------------0---" );
+    tester( 1, "----0---0---0---0-------0-------" );
+    tester( 2, "--------------------2-----------" );
+    tester( 3, "--------------------------------" );
+    tester( 4, "--------------------------------" );
+    tester( 5, "--------------------------------" );
   }
 }
 
