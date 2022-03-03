@@ -153,10 +153,10 @@ MeasureBox::run_unit_tests(){
     E/2 -------------------------------- -------------------------------- --------------------------------
    */
 
-  { // measure 0
-    MeasureBoxSettings settings;
-    settings.time_sig = t.time_signature;
-    
+  MeasureBoxSettings settings;
+  settings.time_sig = t.time_signature;
+
+  { // measure 0    
     MeasureBox const mbox(
       & t.measures[0],
       t.guitar,
@@ -171,7 +171,7 @@ MeasureBox::run_unit_tests(){
 	//std::cout << line[i] << " " << mbox.at( i, 0 ).c << std::endl;
 	GTT_ASSERT_EQUALS( line[i], mbox.at( i, str ).c );
 	if( mbox.at( i, str ).c != '-' ){
-	  
+	  GTT_ASSERT_EQUALS( mbox.at( i, str ).color, 0 );
 	}
       }
     };
