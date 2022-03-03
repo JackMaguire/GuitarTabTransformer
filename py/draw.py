@@ -49,11 +49,30 @@ def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
 
     return x, y, newline
 
+class FloatingMeasure:
+    def __init__( self, mbox, mbox_settings, start_x, start_y, is_newline ):
+        self.mbox = mbox
+        self.mbox_settings = mbox_settings
+        self.start_x = start_x
+        self.start_y = start_y
+
+        self.stop_x_incl = self.start_x + mbox.width() - 1
+        self.stop_y_incl = self.start_y + mbox.height() - 1
+
+        self.is_newline = is_newline
+
+    def cursor_is_in_box( self, cursoryx ):
+        y = cursoryx[0]
+        x = cursoryx[1]
+        return y >= self.start_y and y <= self.stop_y_incl and x >= self.start_x and x <= self.stop_x_incl
+        
+
 def draw_measure(
         stdscr,
         t: gtt.Track,
         m_index: int,
-        settings: Settings
+        settings: Settings,
+        cursoryx
 ):
     noteless_color = curses.color_pair(242)
 
@@ -65,6 +84,9 @@ def draw_measure(
     mbox = MeasureBox( m, g, mbox_settings )
 
     start_x, start_y, is_newline = measure_ind_to_xy( m_index, settings, g )
+
+    fm = FloatingMeasure( mbox, mbox_settings, start_x, start_y, is_newline )
+
     if is_newline:
         for i in range( 0, g.size() ):
             y = start_y + i
@@ -75,6 +97,8 @@ def draw_measure(
             stdscr.addstr( y, x, s, noteless_color )
 
 
+    selected = fm.cursor_is_in_box( cursoryx )
+
     for j in range( 0, mbox.height() ):
         y = start_y + j
         for i in range( 0, mbox.width() ):
@@ -82,7 +106,10 @@ def draw_measure(
             #print( x, y )
             #time.sleep( 10 )
             chardata = mbox.at( i, j )
-            stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
+            if selected:
+                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+3) )
+            else:
+                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
 
     ############
     # draw rests
@@ -93,16 +120,22 @@ def draw_measure(
             for y in range( start_y, end_y ):
                 stdscr.addch( y, x, '~' )
 
+    return fm
 
-def draw_track( stdscr, track, cursor, settings: Settings ):
+
+def draw_track( stdscr, track, cursoryx, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
     rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
     draw_text_at_top( stdscr, track, settings )
 
+    all_fms = []
+
     count = 0
     g = track.guitar
     for m in track.measures:
-        draw_measure( stdscr, track, count, settings )
+        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx ) )
         count += 1
+    
+    return all_fms
 

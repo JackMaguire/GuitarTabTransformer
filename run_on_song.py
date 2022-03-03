@@ -70,7 +70,7 @@ def main( stdscr ):
     while True:
         c_pos = stdscr.getyx()
         stdscr.clear()
-        draw_track( stdscr, track, writer_cursor, settings )
+        floating_measures = draw_track( stdscr, track, c_pos, settings )
         moveto( *c_pos )
 
         stdscr.refresh()
