@@ -124,14 +124,19 @@ MeasureBox::initialize(
 
     if( fret_str.size() == 1 ){
       render_[y][x].c = fret_str[ 0 ];
+      render_[y][x].color = 0;
     } else {
       GTT_ASSERT_EQUALS( fret_str.size(), 2 );
       if( x == 0 ){
 	render_[y][x].c = fret_str[ 0 ];
 	render_[y][x+1].c = fret_str[ 1 ];
+	render_[y][x].color = 0;
+	render_[y][x+1].color = 0;
       } else {
 	render_[y][x-1].c = fret_str[ 0 ];
 	render_[y][x].c = fret_str[ 1 ];
+	render_[y][x-1].color = 0;
+	render_[y][x].color = 0;
       }
     }
   }
