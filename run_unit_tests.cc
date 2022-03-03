@@ -6,6 +6,7 @@
 #include "gtt/rep/measure.hh"
 #include "gtt/rep/track.hh"
 
+#include "gtt/render/ascii/measure_box.hh"
 
 #include "example_songs/spirited_away_intro.hh"
 
@@ -15,6 +16,7 @@ int main(){
   gtt::rep::Guitar::run_unit_tests();
   gtt::rep::Measure::run_unit_tests();
 
+  gtt::render::ascii::MeasureBox::run_unit_tests();
 
   auto const t = gtt::spirited_away_intro();
   json j;

@@ -4,15 +4,19 @@
 #include "gtt/rep/measure.hh"
 #include "gtt/rep/guitar.hh"
 
+#include "example_songs/spirited_away_intro.hh"
+
 #include <string>
 #include <vector>
+
+#include <iostream>
 
 namespace gtt {
 namespace render {
 namespace ascii {
 
 struct MeasureBoxSettings {
-  int measure_width = 24;
+  int measure_width = 32;
   rep::TimeSignature time_sig;
 
   bool x_is_beat( int const x ) const {
@@ -69,6 +73,10 @@ public:
     return render_[ y ][ x ];
   }
 
+  static
+  void run_unit_tests();
+
+
 protected:
   void
   initialize(
@@ -108,11 +116,16 @@ MeasureBox::initialize(
   }
 
   // draw notes
+  std::cout << "!!!" << std::endl;
   for( rep::MeasureNote const & mnote : *measure ){
+    std::cout << "!!!?" << std::endl;
     int const y = mnote.string_assignment;
     int const x = int( settings_.measure_width * mnote.starting_point );
     int const fret = g[ y ].get_fret( mnote.note );
     std::string const fret_str = std::to_string( fret );
+
+    std::cout << "!! " << fret_str << std::endl;
+
     if( fret_str.size() == 1 ){
       render_[y][x].c = fret_str[ 0 ];
     } else {
@@ -128,6 +141,44 @@ MeasureBox::initialize(
   }
 }
 
+
+void
+MeasureBox::run_unit_tests(){
+  rep::Track t = gtt::spirited_away_intro();
+
+  GTT_ASSERT_EQUALS( t.measures.size(), 4 );
+
+  /*
+    E/4 ----------------------------0--- -------------------------------- --------------------------------
+    B/3 ----0---0---0---0-------0------- 0------------------------------- ----------------------------3---
+    G/3 --------------------2----------- ----2-2------------------------- ----2---2---2---2---0---2-------
+    D/3 -------------------------------- -------------------------------- --------------------------------
+    A/2 -------------------------------- -------------------------------- --------------------------------
+    E/2 -------------------------------- -------------------------------- --------------------------------
+   */
+
+  { // measure 0
+    MeasureBoxSettings settings;
+    settings.time_sig = t.time_signature;
+    
+    MeasureBox const mbox(
+      & t.measures[0],
+      t.guitar,
+      settings
+    );
+
+    GTT_ASSERT_EQUALS( t.measures[0].size(), 7 );
+
+    { //line 0
+      std::string const line0 = "----------------------------0---";
+      GTT_ASSERT_EQUALS( int(line0.size()), mbox.width() );
+      for( int i = 0; i < mbox.width(); ++i ){
+	std::cout << line0[i] << " " << mbox.at( i, 0 ).c << std::endl;
+	GTT_ASSERT_EQUALS( line0[i], mbox.at( i, 0 ).c );
+      }
+    }
+  }
+}
 
 } // ascii
 } // render

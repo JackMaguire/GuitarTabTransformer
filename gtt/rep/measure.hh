@@ -137,11 +137,11 @@ public:
   }
 
   auto end() {
-    return notes_in_order_.begin();
+    return notes_in_order_.end();
   }
 
   auto end() const {
-    return notes_in_order_.begin();
+    return notes_in_order_.end();
   }
 
   std::set< MeasureNote >
