@@ -37,6 +37,14 @@ def draw_text_at_top(
     stdscr.addstr( y, x, key_str, text_color )
     x += len(key_str) + 4
 
+    # Mode
+    mode_str = "MODE: "
+    stdscr.addstr( y, x, mode_str, text_color )
+    x += len(mode_str)
+    mode_str = settings.mode_str()
+    stdscr.addstr( y, x, mode_str, curses.color_pair(3+settings.mode_index) )
+    x += len(mode_str) + 4
+
 
 def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
     j_offset = int( index / settings.m_per_row )
@@ -97,7 +105,7 @@ def draw_measure(
             stdscr.addstr( y, x, s, noteless_color )
 
 
-    selected = fm.cursor_is_in_box( cursoryx )
+    selected = fm.cursor_is_in_box( cursoryx ) and settings.mode_str() == "ADD_NOTES"
 
     for j in range( 0, mbox.height() ):
         y = start_y + j
@@ -107,7 +115,7 @@ def draw_measure(
             #time.sleep( 10 )
             chardata = mbox.at( i, j )
             if selected:
-                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+3) )
+                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+4) )
             else:
                 stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
 
