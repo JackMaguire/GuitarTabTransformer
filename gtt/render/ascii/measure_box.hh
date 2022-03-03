@@ -73,6 +73,11 @@ public:
     return render_[ y ][ x ];
   }
 
+  void
+  add_note( rep::MeasureNote const & mn ){
+    measure_->add( mn );
+  }
+
   static
   void run_unit_tests();
 

@@ -25,6 +25,7 @@ def close( stdscr ):
 def enter_is_terminate(x):
     if x == 10:
         return 7
+    return x
 
 def make_edit_window( stdscr ):
     editwin = curses.newwin(5,30, 2,1)
@@ -91,8 +92,12 @@ def char_to_fret( k, stdscr ):
     if k == '(': return 19
     if k in ')~': return 10
 
-    k_str = make_edit_window( stdscr )
-    return int(k_str)
+    k_str = make_edit_window( stdscr ).strip().rstrip()
+    try:
+        i = int(k_str)
+        return i
+    except:
+        return -1
 
 def handle_new_note( k, stdscr, floating_measures, track ):
     cursoryx = stdscr.getyx()
@@ -107,8 +112,16 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     #g = track.guitar
     s = track.guitar.get_string( str_index )
     fret = char_to_fret( k, stdscr )
+    if fret < 0: return
+
     note_int = s.open_string_note().as_int() + fret
-    n = Note( note_int )
+
+    start_point = float( x - fm.start_x ) / fm.mbox.width()
+    length = 0 # TODO?
+
+    mn = MeasureNote( note_int, start_point, length )
+    mn.string_assignment = str_index
+    fm.mbox.add_note( mn )
     #print( fret )
     #time.sleep( 10 )
 
@@ -146,6 +159,7 @@ def main( stdscr ):
 
         stdscr.refresh()
         k = stdscr.get_wch()
+        strk = str(k)
 
         #print( k )
         #time.sleep( 10 )
@@ -158,11 +172,11 @@ def main( stdscr ):
         # Cursor Movement:
         if k in ( ' ', ):
             settings.toggle_mode()
-        elif k in ( left, right, up, down ) or k in 'WASDwasd':
+        elif k in ( left, right, up, down ) or strk in 'WASDwasd':
             handle_move( k, stdscr, moveto )
-        elif settings.mode_str() == "ADD_NOTES" and k in '1234567890!@#$%^&*()`~+':
+        elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
-        
+            moveto( *cursoryx )
 
 
 

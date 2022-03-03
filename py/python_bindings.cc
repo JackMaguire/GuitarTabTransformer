@@ -242,5 +242,6 @@ PYBIND11_MODULE(gtt, m) {
       mbox.def( "at", &MeasureBox::at );
       mbox.def( "width", &MeasureBox::width );
       mbox.def( "height", &MeasureBox::height );
+      mbox.def( "add_note", &MeasureBox::add_note );
     }
 }
