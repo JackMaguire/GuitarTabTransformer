@@ -26,6 +26,8 @@ struct GuitarTabTransformerException : public std::exception {
 
 #define GTT_ASSERT_EQUALS(x,y) if (!(x == y)) { throw GuitarTabTransformerException( std::to_string(x) + " == " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
 
+#define GTT_ASSERT_NOT_EQUALS(x,y) if (x == y) { throw GuitarTabTransformerException( std::to_string(x) + " != " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
+
 #define GTT_ASSERT_DELTA( x, y, d ) if ( std::abs( x - y ) > d ) { throw GuitarTabTransformerException( std::to_string(x) + " is within " + std::to_string(d) + " of " + std::to_string(y) + " failed on line " + std::to_string( __LINE__ ) + " in " + __FILE__ ); }
 
 #ifndef GTT_DEBUG

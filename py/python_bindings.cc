@@ -234,10 +234,13 @@ PYBIND11_MODULE(gtt, m) {
       py::class_< MeasureBox::CharVal > mboxcv( ascii, "MeasureBoxCharVal" );
       mboxcv.def( py::init<>() );
       mboxcv.def_readwrite( "color", &MeasureBox::CharVal::color );
+      mboxcv.def_readwrite( "c", &MeasureBox::CharVal::c );
       mboxcv.def_readwrite( "char", &MeasureBox::CharVal::c );
 
       py::class_< MeasureBox > mbox( ascii, "MeasureBox" );
       mbox.def( py::init< gtt::rep::Measure *, gtt::rep::Guitar const &, MeasureBoxSettings const & >() );
       mbox.def( "at", &MeasureBox::at );
+      mbox.def( "width", &MeasureBox::width );
+      mbox.def( "height", &MeasureBox::height );
     }
 }

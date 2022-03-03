@@ -1,10 +1,14 @@
 import gtt
 from gtt import *
 
+from gtt.render.ascii import *
+
 from py.settings import Settings
 
 import curses
 from curses.textpad import rectangle
+
+#import time
 
 def draw_text_at_top(
         stdscr,
@@ -45,32 +49,22 @@ def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
 
     return x, y, newline
 
-
 def draw_measure(
         stdscr,
-        m: gtt.Measure,
-        g: gtt.Guitar,
-        #cursor: Cursor,
-        m_ind: int,
+        t: gtt.Track,
+        m_index: int,
         settings: Settings
 ):
     noteless_color = curses.color_pair(242)
 
-    #################
-    # draw background
-    start_x, start_y, is_newline = measure_ind_to_xy( m_ind, settings, g )
-    #print( m_ind, start_x, start_y )
-    end_x = start_x + settings.total_measure_width
-    end_y = start_y + g.size()
-    for x in range( start_x, end_x ):
-        if settings.x_is_beat( x - start_x ):
-            color = curses.color_pair(252)
-        else:
-            color = noteless_color
+    m: gtt.Measure = t.measures[ m_index ]
+    g: gtt.Guitar =  t.guitar
 
-        for y in range( start_y, end_y ):
-            stdscr.addch( y, x, '-', color )
+    mbox_settings = MeasureBoxSettings()
+    mbox_settings.time_sig = t.time_signature
+    mbox = MeasureBox( m, g, mbox_settings )
 
+    start_x, start_y, is_newline = measure_ind_to_xy( m_index, settings, g )
     if is_newline:
         for i in range( 0, g.size() ):
             y = start_y + i
@@ -80,15 +74,15 @@ def draw_measure(
                 x = 1
             stdscr.addstr( y, x, s, noteless_color )
 
-    ############
-    # draw notes
-    for i in range( 0, len(m) ):
-        note = m[i]
-        y = start_y + note.string_assignment
-        x = start_x + settings.measure_buffer + int( settings.active_measure_width * note.starting_point )
-        fret = g.get_string( note.string_assignment ).get_fret( note.note )
-        stdscr.addstr( y, x, str(fret) )
 
+    for j in range( 0, mbox.height() ):
+        y = start_y + j
+        for i in range( 0, mbox.width() ):
+            x = start_x + i
+            #print( x, y )
+            #time.sleep( 10 )
+            chardata = mbox.at( i, j )
+            stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
 
     ############
     # draw rests
@@ -109,7 +103,6 @@ def draw_track( stdscr, track, cursor, settings: Settings ):
     count = 0
     g = track.guitar
     for m in track.measures:
-        #print( count, m )
-        draw_measure( stdscr, m, g, count, settings )
+        draw_measure( stdscr, track, count, settings )
         count += 1
 

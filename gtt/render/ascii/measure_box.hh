@@ -177,9 +177,20 @@ MeasureBox::run_unit_tests(){
 	GTT_ASSERT_EQUALS( line[i], mbox.at( i, str ).c );
 	if( mbox.at( i, str ).c != '-' ){
 	  GTT_ASSERT_EQUALS( mbox.at( i, str ).color, 0 );
+	} else {
+	  GTT_ASSERT_NOT_EQUALS( mbox.at( i, str ).color, 0 );
 	}
       }
     };
+
+    // Test beat
+    GTT_ASSERT_EQUALS( mbox.at( 0, 0 ).color, 252 );
+
+    // Test non-beat
+    GTT_ASSERT_EQUALS( mbox.at( 1, 0 ).color, 242 );
+
+    // Test note
+    GTT_ASSERT_EQUALS( mbox.at( 4, 1 ).color, 0 );
 
     tester( 0, "----------------------------0---" );
     tester( 1, "----0---0---0---0-------0-------" );
