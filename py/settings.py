@@ -33,8 +33,31 @@ class Settings:
             "self.m_per_row" : self.m_per_row,
             "self.row_gap" : self.row_gap,
             "self.x_gap" : self.x_gap,
-            "self.possible_modes" : self.possible_modes,
-            "self.mode_index" : self.mode_index
+            "self.mode" : self.possible_modes[ self.mode_index ]
         }
 
     
+    def deserialize( self, settings_json ):
+        if "self.measure_buffer" in settings_json:
+            self.measure_buffer = settings_json[ "self.measure_buffer" ]
+        if "self.active_measure_width" in settings_json:
+            self.active_measure_width = settings_json[ "self.active_measure_width" ]
+        if "self.m_per_row" in settings_json:
+            self.m_per_row = settings_json[ "self.m_per_row" ]
+        if "self.row_gap" in settings_json:
+            self.row_gap = settings_json[ "self.row_gap" ]
+        if "self.x_gap" in settings_json:
+            self.x_gap = settings_json[ "self.x_gap" ]
+
+        # allow for list to change over time
+        if "self.mode" in settings_json:
+            mode = settings_json[ "self.mode" ]
+        elif "self.possible_modes" in settings_json and "self.mode_index" in settings_json:
+            old_modes = settings_json[ "self.possible_modes" ]
+            mode = old_modes[ settings_json[ "self.mode_index" ] ]
+        else:
+            mode = self.possible_modes[0]
+
+        for i in range( 0, len(self.possible_modes) ):
+            if self.possible_modes[i] == mode:
+                self.mode_index = i
