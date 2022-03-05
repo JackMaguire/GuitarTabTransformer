@@ -1,49 +1,16 @@
 import gtt
 from gtt import *
-
 from gtt.render.ascii import *
 
 from py.settings import Settings
-from py.saveload import save_to_file
+from py.actions import *
 
 import curses
 from curses.textpad import rectangle
 
-#import time
-
-class StringChanger:
-    def __init__( self, str_no ):
-        self.str_no = str_no
-
-    def __call__( self, track, settings, setting_str ):
-        note = Note( setting_str )
-        track.guitar[ self.str_no ].set_open_string_note( note )
-
-def update_sig_top( track, settings, setting_str ):
-    try:
-        new_top = int( setting_str.strip().rstrip() )
-        track.time_signature.top = new_top
-    except:
-        pass
-
-def update_m_width( track, settings, setting_str ):
-    try:
-        new_mw = int( setting_str.strip().rstrip() )
-        settings.active_measure_width = new_mw
-    except:
-        pass
-
-def save_json_please( track, settings, setting_str ):
-    try:
-        filename = setting_str.strip().rstrip()
-        save_data = save_to_file( filename, track, settings )
-    except Exception as e:
-        try:
-            save_to_file( "/tmp/gtt_save.json", track, settings )
-            print( "saved to /tmp/gtt_save.json because of error:", e )
-        except:
-            print( "No save!!!", e )
-
+def add_over_range( local_actions, y, x, string, action ):
+     for i in range( 0, len( string ) ):
+         local_actions[ (y, x+i) ] = action
 
 def draw_text_at_top(
         stdscr,
@@ -57,8 +24,7 @@ def draw_text_at_top(
     x = settings.x_gap
 
     def add_action( x, string, action ):
-        for i in range( 0, len( string ) ):
-            local_actions[ (y, x+i) ] = action
+        add_over_range( local_actions, y, x, string, action )
 
     # Time Signature
     ts_top_str = str(track.time_signature.top)
@@ -136,7 +102,8 @@ def draw_measure(
         t: gtt.Track,
         m_index: int,
         settings: Settings,
-        cursoryx
+        cursoryx,
+        local_actions
 ):
     noteless_color = curses.color_pair(242)
 
@@ -161,6 +128,7 @@ def draw_measure(
             if len(s) > 3:
                 x = 1
             stdscr.addstr( y, x, s, noteless_color )
+            add_over_range( local_actions, y, x, s, StringChanger(i) )
 
 
     selected = fm.cursor_is_in_box( cursoryx ) and settings.mode_str() == "ADD_NOTES"
@@ -202,7 +170,7 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
     count = 0
     g = track.guitar
     for m in track.measures:
-        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx ) )
+        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx, local_actions ) )
         count += 1
     
     return all_fms, local_actions

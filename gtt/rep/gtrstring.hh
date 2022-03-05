@@ -98,6 +98,9 @@ GtrString::run_unit_tests(){
   GTT_ASSERT( s.can_represent( Note( "Ab/7" )+1 ) );
   GTT_ASSERT( not s.can_represent( Note( "Ab/8" ) ) );
 
+  s.set_open_string_note( "Ab/4"_note );
+  GTT_ASSERT_EQUALS( s.get_fret( "Ab/5"_note ), 12 );
+
   {//test serialization
     json j;
     GtrString const s1( "A/2", 22 );

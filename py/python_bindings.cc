@@ -120,6 +120,7 @@ PYBIND11_MODULE(gtt, m) {
     gtr.def( "__setitem__", [](Guitar& g, size_t index, GtrString const & gs ) { g[index] = gs;} );
     //gtr.def( "get_string", [](Guitar const & g, size_t index) -> GtrString & {return &g[index];} );
     gtr.def( "get_string", &Guitar::get_string );
+    gtr.def( "get_string_ptr", &Guitar::get_string_ptr );
     gtr.def( "serialize", &Guitar::serialize );
     gtr.def( "deserialize", &Guitar::deserialize );
 

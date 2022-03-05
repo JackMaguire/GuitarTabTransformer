@@ -48,6 +48,11 @@ public:
     return strings_[ i ];
   }
 
+  GtrString *
+  get_string_ptr( int const i ) {
+    return &strings_[ i ];
+  }
+
   GtrString &
   operator[]( int const i ) {
     return strings_[ i ];
