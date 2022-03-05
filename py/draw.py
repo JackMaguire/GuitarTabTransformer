@@ -11,6 +11,14 @@ from curses.textpad import rectangle
 
 #import time
 
+class StringChanger:
+    def __init__( self, str_no ):
+        self.str_no = str_no
+
+    def __call__( self, track, settings, setting_str ):
+        note = Note( setting_str )
+        track.guitar[ self.str_no ].set_open_string_note( note )
+
 def update_sig_top( track, settings, setting_str ):
     try:
         new_top = int( setting_str.strip().rstrip() )
@@ -37,26 +45,25 @@ def save_json_please( track, settings, setting_str ):
             print( "No save!!!", e )
 
 
-def add_over_range( topline_actions, x, string, action ):
-    for i in range( 0, len( string ) ):
-        topline_actions[ x+i ] = action
-
 def draw_text_at_top(
         stdscr,
         track: gtt.Track,
-        settings: Settings
+        settings: Settings,
+        local_actions
 ):
-    topline_actions = {}
-
     text_color = curses.color_pair(242)
     
     y = 1
     x = settings.x_gap
 
+    def add_action( x, string, action ):
+        for i in range( 0, len( string ) ):
+            local_actions[ (y, x+i) ] = action
+
     # Time Signature
     ts_top_str = str(track.time_signature.top)
     stdscr.addstr( y, x, ts_top_str, text_color )
-    add_over_range( topline_actions, x, ts_top_str, update_sig_top )
+    add_action( x, ts_top_str, update_sig_top )
     x += len(ts_top_str)
 
     stdscr.addch( y, x, '/', text_color )
@@ -77,7 +84,7 @@ def draw_text_at_top(
     x += len(w_str)
     w_str = str( settings.active_measure_width )
     stdscr.addstr( y, x, w_str, text_color )
-    add_over_range( topline_actions, x, w_str, update_m_width )
+    add_action( x, w_str, update_m_width )
     x += len(w_str) + 4
 
     # Mode
@@ -88,15 +95,12 @@ def draw_text_at_top(
     stdscr.addstr( y, x, mode_str, curses.color_pair(3+settings.mode_index) )
     x += len(mode_str) + 4
 
-    
-
     # Actions
     next_str = "SAVE"
     stdscr.addstr( y, x, next_str, curses.color_pair(2) )
-    add_over_range( topline_actions, x, next_str, save_json_please )
+    add_action( x, next_str, save_json_please )
     x += len( next_str )
 
-    return topline_actions
 
 def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar ):
     j_offset = int( index / settings.m_per_row )
@@ -189,7 +193,9 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
     rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
-    topline_actions = draw_text_at_top( stdscr, track, settings )
+    local_actions = {}
+
+    draw_text_at_top( stdscr, track, settings, local_actions )
 
     all_fms = []
 
@@ -199,5 +205,5 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
         all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx ) )
         count += 1
     
-    return all_fms, topline_actions
+    return all_fms, local_actions
 

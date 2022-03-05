@@ -125,13 +125,18 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     mn = MeasureNote( note_int, start_point, length )
     mn.string_assignment = str_index
     fm.mbox.add_note( mn )
-    #print( fret )
-    #time.sleep( 10 )
 
-def handle_topline_action( stdscr, topline_actions, track, settings, x ):
-    if x in topline_actions:
+def handle_local_action( stdscr, local_actions, track, settings ):
+    y, x = stdscr.getyx()
+    key = (y, x)
+    if key in local_actions:
         setting = make_edit_window( stdscr ).strip().rstrip()
-        topline_actions[x]( track=track, settings=settings, setting_str=setting )    
+        local_actions[ key ]( track=track, settings=settings, setting_str=setting )
+    elif False:
+        print( "No Key:", key )
+        for k in local_actions.keys():
+            print( k )
+        time.sleep( 10 )
 
 def main( stdscr ):
     parser = argparse.ArgumentParser(description='')
@@ -165,7 +170,7 @@ def main( stdscr ):
     while True:
         cursoryx = stdscr.getyx()
         stdscr.clear()
-        floating_measures, topline_actions = draw_track( stdscr, track, cursoryx, settings )
+        floating_measures, local_actions = draw_track( stdscr, track, cursoryx, settings )
         moveto( *cursoryx )
 
         stdscr.refresh()
@@ -190,10 +195,9 @@ def main( stdscr ):
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
-        elif settings.mode_str() == "EDIT" and strk in '+\n' and y == 1:
-            handle_topline_action( stdscr, topline_actions, track, settings, x )
-            #print( 123 )
-            #time.sleep( 10 )
+        elif settings.mode_str() == "EDIT" and strk in '+\n':
+            handle_local_action( stdscr, local_actions, track, settings )
+
             
 
 
