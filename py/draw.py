@@ -4,6 +4,7 @@ from gtt import *
 from gtt.render.ascii import *
 
 from py.settings import Settings
+from py.saveload import save_to_file
 
 import curses
 from curses.textpad import rectangle
@@ -26,10 +27,14 @@ def update_m_width( track, settings, setting_str ):
 
 def save_json_please( track, settings, setting_str ):
     try:
-        new_mw = int( setting_str.strip().rstrip() )
-        settings.active_measure_width = new_mw
-    except:
-        pass
+        filename = setting_str.strip().rstrip()
+        save_data = save_to_file( filename, track, settings )
+    except Exception as e:
+        try:
+            save_to_file( "/tmp/gtt_save.json", track, settings )
+            print( "saved to /tmp/gtt_save.json because of error:", e )
+        except:
+            print( "No save!!!", e )
 
 
 def add_over_range( topline_actions, x, string, action ):

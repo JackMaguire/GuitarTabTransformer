@@ -1,6 +1,8 @@
 import gtt
 from gtt import *
 
+#from json import json
+
 class Settings:
     def __init__(self, track: gtt.Track):
         self.measure_buffer = 0
@@ -24,13 +26,15 @@ class Settings:
     def toggle_mode( self ):
         self.mode_index = (self.mode_index+1) % len(self.possible_modes)
 
-    '''
-    def x_is_beat( self, x ):
-        if x < self.measure_buffer: return False
+    def serialize( self ):
+        return {
+            "self.measure_buffer" : self.measure_buffer,
+            "self.active_measure_width" : self.active_measure_width,
+            "self.m_per_row" : self.m_per_row,
+            "self.row_gap" : self.row_gap,
+            "self.x_gap" : self.x_gap,
+            "self.possible_modes" : self.possible_modes,
+            "self.mode_index" : self.mode_index
+        }
 
-        x = x - self.measure_buffer
-
-        if x >= self.active_measure_width: return False
-
-        return x % self.beat_size == 0
-    '''
+    

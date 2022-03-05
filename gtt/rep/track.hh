@@ -43,6 +43,15 @@ struct Track {
     file << j;
   }
 
+  std::string
+  serialize_to_string() const {
+    json j;
+    serialize( j );
+    std::stringstream ss;
+    ss << j;
+    return ss.str();
+  }
+
   void
   serialize( json & j ) const {
     json gj;
@@ -66,6 +75,12 @@ struct Track {
   load_from_file( std::string const & filename ) {
     std::ifstream ifs( filename );
     json j = json::parse(ifs);
+    deserialize( j );
+  }
+
+  void
+  deserialize_from_string( std::string const & str ) {
+    json j = json::parse(str);
     deserialize( j );
   }
 

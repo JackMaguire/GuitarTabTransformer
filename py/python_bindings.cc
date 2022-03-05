@@ -214,6 +214,8 @@ PYBIND11_MODULE(gtt, m) {
 
     //track.def( "serialize", &Track::serialize );
     // track.def( "deserialize", &Track::deserialize );
+    track.def( "serialize_to_string", &Track::serialize_to_string );
+    track.def( "deserialize_from_string", &Track::deserialize_from_string );
     track.def( "save_to_file", &Track::save_to_file );
     track.def( "load_from_file", &Track::load_from_file );
 
