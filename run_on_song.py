@@ -125,6 +125,17 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     #print( fret )
     #time.sleep( 10 )
 
+def handle_topline_action( stdscr, topline_actions, track, settings, x ):
+    if x in topline_actions:
+        setting = make_edit_window( stdscr ).strip().rstrip()
+        topline_actions[x]( track=track, settings=settings, setting_str=setting )
+    elif False:
+        print( "no match for", x )
+        for key in topline_actions.keys():
+            print( "Key:", key )
+        time.sleep(5 )
+    
+
 def main( stdscr ):
     # Clear screen
     stdscr.clear()
@@ -154,7 +165,7 @@ def main( stdscr ):
     while True:
         cursoryx = stdscr.getyx()
         stdscr.clear()
-        floating_measures = draw_track( stdscr, track, cursoryx, settings )
+        floating_measures, topline_actions = draw_track( stdscr, track, cursoryx, settings )
         moveto( *cursoryx )
 
         stdscr.refresh()
@@ -163,6 +174,8 @@ def main( stdscr ):
 
         #print( k )
         #time.sleep( 10 )
+
+        y, x = stdscr.getyx()
 
         down = 258
         up = 259
@@ -177,7 +190,11 @@ def main( stdscr ):
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
-
+        elif settings.mode_str() == "EDIT" and strk in '+\n' and y == 1:
+            handle_topline_action( stdscr, topline_actions, track, settings, x )
+            #print( 123 )
+            #time.sleep( 10 )
+            
 
 
 if __name__ == '__main__':

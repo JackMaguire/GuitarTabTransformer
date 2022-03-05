@@ -10,11 +10,31 @@ from curses.textpad import rectangle
 
 #import time
 
+def update_sig_top( track, settings, setting_str ):
+    try:
+        new_top = int( setting_str.strip().rstrip() )
+        track.time_signature.top = new_top
+    except:
+        pass
+
+def update_m_width( track, settings, setting_str ):
+    try:
+        new_mw = int( setting_str.strip().rstrip() )
+        settings.active_measure_width = new_mw
+    except:
+        pass
+
+def add_over_range( topline_actions, x, string, action ):
+    for i in range( 0, len( string ) ):
+        topline_actions[ x+i ] = action
+
 def draw_text_at_top(
         stdscr,
         track: gtt.Track,
         settings: Settings
 ):
+    topline_actions = {}
+
     text_color = curses.color_pair(242)
     
     y = 1
@@ -23,6 +43,7 @@ def draw_text_at_top(
     # Time Signature
     ts_top_str = str(track.time_signature.top)
     stdscr.addstr( y, x, ts_top_str, text_color )
+    add_over_range( topline_actions, x, ts_top_str, update_sig_top )
     x += len(ts_top_str)
 
     stdscr.addch( y, x, '/', text_color )
@@ -37,6 +58,15 @@ def draw_text_at_top(
     stdscr.addstr( y, x, key_str, text_color )
     x += len(key_str) + 4
 
+    # Width
+    w_str = "WIDTH: "
+    stdscr.addstr( y, x, w_str, text_color )
+    x += len(w_str)
+    w_str = str( settings.active_measure_width )
+    stdscr.addstr( y, x, w_str, text_color )
+    add_over_range( topline_actions, x, w_str, update_m_width )
+    x += len(w_str) + 4
+
     # Mode
     mode_str = "MODE: "
     stdscr.addstr( y, x, mode_str, text_color )
@@ -45,13 +75,14 @@ def draw_text_at_top(
     stdscr.addstr( y, x, mode_str, curses.color_pair(3+settings.mode_index) )
     x += len(mode_str) + 4
 
+    return topline_actions
 
-def measure_ind_to_xy( index, settings: Settings, g: gtt.Guitar ):
+def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar ):
     j_offset = int( index / settings.m_per_row )
     y = 3 + j_offset*(settings.row_gap+g.size())
 
     i_offset = index % settings.m_per_row
-    x = settings.x_gap + i_offset*(settings.total_measure_width+1)
+    x = settings.x_gap + i_offset*(mbox_settings.measure_width+1)
 
     newline = i_offset==0
 
@@ -89,9 +120,11 @@ def draw_measure(
 
     mbox_settings = MeasureBoxSettings()
     mbox_settings.time_sig = t.time_signature
+    mbox_settings.measure_width = settings.active_measure_width
+
     mbox = MeasureBox( m, g, mbox_settings )
 
-    start_x, start_y, is_newline = measure_ind_to_xy( m_index, settings, g )
+    start_x, start_y, is_newline = measure_ind_to_xy( m_index, settings, mbox_settings, g )
 
     fm = FloatingMeasure( mbox, mbox_settings, start_x, start_y, is_newline )
 
@@ -135,7 +168,7 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
     rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
-    draw_text_at_top( stdscr, track, settings )
+    topline_actions = draw_text_at_top( stdscr, track, settings )
 
     all_fms = []
 
@@ -145,5 +178,5 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
         all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx ) )
         count += 1
     
-    return all_fms
+    return all_fms, topline_actions
 
