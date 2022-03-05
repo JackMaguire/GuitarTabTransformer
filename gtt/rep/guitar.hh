@@ -48,9 +48,9 @@ public:
     return strings_[ i ];
   }
 
-  GtrString *
-  get_string_ptr( int const i ) {
-    return &strings_[ i ];
+  void
+  set_string_note( int const i, Note const note ) {
+    strings_[ i ].set_open_string_note( note );
   }
 
   GtrString &

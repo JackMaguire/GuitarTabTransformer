@@ -126,12 +126,13 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     mn.string_assignment = str_index
     fm.mbox.add_note( mn )
 
-def handle_local_action( stdscr, local_actions, track, settings ):
+def handle_local_action( stdscr, local_actions, track, settings, settings_str ):
     y, x = stdscr.getyx()
     key = (y, x)
     if key in local_actions:
-        setting = make_edit_window( stdscr ).strip().rstrip()
-        local_actions[ key ]( track=track, settings=settings, setting_str=setting )
+        if settings_str == None:
+            settings_str = make_edit_window( stdscr ).strip().rstrip()
+        local_actions[ key ]( track=track, settings=settings, setting_str=settings_str )
     elif False:
         print( "No Key:", key )
         for k in local_actions.keys():
@@ -196,7 +197,11 @@ def main( stdscr ):
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
         elif settings.mode_str() == "EDIT" and strk in '+\n':
-            handle_local_action( stdscr, local_actions, track, settings )
+            handle_local_action( stdscr, local_actions, track, settings, settings_str=None )
+        elif settings.mode_str() == "EDIT" and strk in '{}':
+            if strk == '{': settings_str = "-1"
+            else: settings_str = "1"
+            handle_local_action( stdscr, local_actions, track, settings, settings_str=settings_str )
 
             
 
