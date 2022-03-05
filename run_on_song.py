@@ -128,13 +128,7 @@ def handle_new_note( k, stdscr, floating_measures, track ):
 def handle_topline_action( stdscr, topline_actions, track, settings, x ):
     if x in topline_actions:
         setting = make_edit_window( stdscr ).strip().rstrip()
-        topline_actions[x]( track=track, settings=settings, setting_str=setting )
-    elif False:
-        print( "no match for", x )
-        for key in topline_actions.keys():
-            print( "Key:", key )
-        time.sleep(5 )
-    
+        topline_actions[x]( track=track, settings=settings, setting_str=setting )    
 
 def main( stdscr ):
     # Clear screen

@@ -24,6 +24,14 @@ def update_m_width( track, settings, setting_str ):
     except:
         pass
 
+def save_json_please( track, settings, setting_str ):
+    try:
+        new_mw = int( setting_str.strip().rstrip() )
+        settings.active_measure_width = new_mw
+    except:
+        pass
+
+
 def add_over_range( topline_actions, x, string, action ):
     for i in range( 0, len( string ) ):
         topline_actions[ x+i ] = action
@@ -74,6 +82,14 @@ def draw_text_at_top(
     mode_str = settings.mode_str()
     stdscr.addstr( y, x, mode_str, curses.color_pair(3+settings.mode_index) )
     x += len(mode_str) + 4
+
+    
+
+    # Actions
+    next_str = "SAVE"
+    stdscr.addstr( y, x, next_str, curses.color_pair(2) )
+    add_over_range( topline_actions, x, next_str, save_json_please )
+    x += len( next_str )
 
     return topline_actions
 
