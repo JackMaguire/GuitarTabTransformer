@@ -10,6 +10,9 @@ import time
 
 from py.settings import Settings
 from py.draw import draw_track
+from py.saveload import load_from_file
+
+import argparse
 
 class Cursor:
     def __init__(self):
@@ -131,18 +134,21 @@ def handle_topline_action( stdscr, topline_actions, track, settings, x ):
         topline_actions[x]( track=track, settings=settings, setting_str=setting )    
 
 def main( stdscr ):
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--load', type=str, required=False)
+    args = parser.parse_args()
+
     # Clear screen
     stdscr.clear()
     stdscr.border(0)
 
-    track = Track( "example_songs/spirited_away_intro.json" )
-
-    writer_cursor = Cursor()
-    settings = Settings( track )
-
-    #draw_track( stdscr, track, writer_cursor, settings )
-    #stdscr.refresh()
-    #time.sleep( 10 )
+    if args.load:
+        track = Track()
+        settings = Settings( track )
+        load_from_file( args.load, track, settings )
+    else:
+        track = Track( "example_songs/spirited_away_intro.json" )
+        settings = Settings( track )
 
     def moveto( y, x ):
         maxy, maxx = stdscr.getmaxyx()
