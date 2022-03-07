@@ -198,6 +198,9 @@ def main( stdscr ):
             if action != None:
                 if strk == '{': action.handle_decrement( track, settings )
                 else: action.handle_increment( track, settings )
+        elif settings.mode_str() == "EDIT" and strk == '\n':
+            action = local_actions.get_action( y=y, x=x )
+            if action != None: action.handle_enter( track, settings )
             
 
 
