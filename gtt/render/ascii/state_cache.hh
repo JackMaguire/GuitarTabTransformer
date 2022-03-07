@@ -22,7 +22,7 @@ public:
     if( *current_iter_ == state ) return;
 
     // delete future if there is any
-    all_states_.remove( all_states_.begin(), current_iter_ );
+    all_states_.erase( all_states_.begin(), current_iter_ );
 
     // save this state
     all_states_.push_front( state );

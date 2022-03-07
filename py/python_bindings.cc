@@ -10,6 +10,7 @@
 #include "gtt/asserts.hh"
 
 #include "gtt/render/ascii/measure_box.hh"
+#include "gtt/render/ascii/state_cache.hh"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
@@ -247,5 +248,12 @@ PYBIND11_MODULE(gtt, m) {
       mbox.def( "width", &MeasureBox::width );
       mbox.def( "height", &MeasureBox::height );
       mbox.def( "add_note", &MeasureBox::add_note );
+
+      py::class_< StateCache > state_cache( ascii, "StateCache" );
+      state_cache.def( py::init<>() );
+      state_cache.def( "register_new_state", &StateCache::register_new_state );
+      state_cache.def( "get_current_state", &StateCache::get_current_state );
+      state_cache.def( "undo", &StateCache::undo );
+      state_cache.def( "redo", &StateCache::redo );
     }
 }
