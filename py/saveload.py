@@ -18,4 +18,9 @@ def load_from_file( filename, track, settings ):
         settings_json = json.load( fp )
     track.deserialize_from_string( settings_json[ "_track_" ] )
     settings.deserialize( settings_json )
+
+def load_from_string( string, track, settings ):
+    settings_json = json.loads( string )
+    track.deserialize_from_string( settings_json[ "_track_" ] )
+    settings.deserialize( settings_json )
     

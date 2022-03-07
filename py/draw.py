@@ -65,7 +65,17 @@ def draw_text_at_top(
     next_str = "SAVE"
     stdscr.addstr( y, x, next_str, curses.color_pair(2) )
     add_action( x, next_str, SaveJsonPlease() )
-    x += len( next_str )
+    x += len( next_str ) + 4
+
+    next_str = "UNDO"
+    stdscr.addstr( y, x, next_str, curses.color_pair(3) )
+    add_action( x, next_str, Undo() )
+    x += len( next_str ) + 4
+
+    next_str = "REDO"
+    stdscr.addstr( y, x, next_str, curses.color_pair(4) )
+    add_action( x, next_str, Redo() )
+    x += len( next_str ) + 4
 
 
 def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar ):
