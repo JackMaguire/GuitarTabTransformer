@@ -126,18 +126,13 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     mn.string_assignment = str_index
     fm.mbox.add_note( mn )
 
-def handle_local_action( stdscr, local_actions, track, settings, settings_str ):
+def prompt_for_local_action( stdscr, local_actions, track, settings ):
     y, x = stdscr.getyx()
-    key = (y, x)
-    if key in local_actions:
-        if settings_str == None:
-            settings_str = make_edit_window( stdscr ).strip().rstrip()
-        local_actions[ key ]( track=track, settings=settings, setting_str=settings_str )
-    elif False:
-        print( "No Key:", key )
-        for k in local_actions.keys():
-            print( k )
-        time.sleep( 10 )
+    action = local_actions.get_action( y=y, x=x )
+    if action == None: return
+
+    settings_str = make_edit_window( stdscr ).strip().rstrip()
+    action.handle_string_entry( track=track, settings=settings, setting_str=settings_str )
 
 def main( stdscr ):
     parser = argparse.ArgumentParser(description='')
@@ -196,13 +191,13 @@ def main( stdscr ):
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
-        elif settings.mode_str() == "EDIT" and strk in '+\n':
-            handle_local_action( stdscr, local_actions, track, settings, settings_str=None )
+        elif settings.mode_str() == "EDIT" and strk == '+':
+            prompt_for_local_action( stdscr, local_actions, track, settings )
         elif settings.mode_str() == "EDIT" and strk in '{}':
-            if strk == '{': settings_str = "-1"
-            else: settings_str = "1"
-            handle_local_action( stdscr, local_actions, track, settings, settings_str=settings_str )
-
+            action = local_actions.get_action( y=y, x=x )
+            if action != None:
+                if strk == '{': action.handle_decrement( track, settings )
+                else: action.handle_increment( track, settings )
             
 
 

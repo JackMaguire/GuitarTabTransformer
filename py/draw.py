@@ -10,7 +10,7 @@ from curses.textpad import rectangle
 
 def add_over_range( local_actions, y, x, string, action ):
      for i in range( 0, len( string ) ):
-         local_actions[ (y, x+i) ] = action
+         local_actions.set_action( y=y, x=x+i, action=action )
 
 def draw_text_at_top(
         stdscr,
@@ -29,7 +29,7 @@ def draw_text_at_top(
     # Time Signature
     ts_top_str = str(track.time_signature.top)
     stdscr.addstr( y, x, ts_top_str, text_color )
-    add_action( x, ts_top_str, update_sig_top )
+    add_action( x, ts_top_str, UpdateSigTop() )
     x += len(ts_top_str)
 
     stdscr.addch( y, x, '/', text_color )
@@ -50,7 +50,7 @@ def draw_text_at_top(
     x += len(w_str)
     w_str = str( settings.active_measure_width )
     stdscr.addstr( y, x, w_str, text_color )
-    add_action( x, w_str, update_m_width )
+    add_action( x, w_str, UpdateMWidth() )
     x += len(w_str) + 4
 
     # Mode
@@ -64,7 +64,7 @@ def draw_text_at_top(
     # Actions
     next_str = "SAVE"
     stdscr.addstr( y, x, next_str, curses.color_pair(2) )
-    add_action( x, next_str, save_json_please )
+    add_action( x, next_str, SaveJsonPlease() )
     x += len( next_str )
 
 
@@ -161,7 +161,7 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
     rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
-    local_actions = {}
+    local_actions = ActionMap( stdscr )
 
     draw_text_at_top( stdscr, track, settings, local_actions )
 
