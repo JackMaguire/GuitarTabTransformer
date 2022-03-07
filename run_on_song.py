@@ -1,6 +1,7 @@
 import gtt
 from gtt import *
 import gtt.shortcuts as X
+from gtt.render.ascii import StateCache
 
 import curses
 from curses import wrapper
@@ -10,7 +11,7 @@ import time
 
 from py.settings import Settings
 from py.draw import draw_track
-from py.saveload import load_from_file
+from py.saveload import load_from_file, save_to_str, load_from_str
 
 import argparse
 
@@ -150,10 +151,6 @@ def main( stdscr ):
     else:
         track = Track( "example_songs/spirited_away_intro.json" )
         settings = Settings( track )
-
-    def save():
-        settings.state_cache.register_new_state( save_to_str( track, settings ) )
-    save()
         
     def moveto( y, x ):
         maxy, maxx = stdscr.getmaxyx()
@@ -166,6 +163,9 @@ def main( stdscr ):
 
         stdscr.move( y, x )
 
+    sc = StateCache()
+    sc.register_new_state( save_to_str( track, settings ) )
+    assert( len(sc.get_current_state()) > 0 )
 
     while True:
         cursoryx = stdscr.getyx()
@@ -203,13 +203,18 @@ def main( stdscr ):
             if action != None:
                 if strk == '{': action.handle_decrement( track, settings )
                 else: action.handle_increment( track, settings )
-        elif settings.mode_str() == "EDIT" and strk == '\n':
+        elif strk == '\n':
             action = local_actions.get_action( y=y, x=x )
             if action != None: action.handle_enter( track, settings )
+        elif strk == 'U':
+            load_from_str( sc.undo(), track, settings )
+        elif strk == 'R':
+            load_from_str( sc.redo(), track, settings )
         else:
             continue # no save
 
-        save()
+        sc.register_new_state( save_to_str( track, settings ) )
+        assert( len(sc.get_current_state()) > 0 )
 
 if __name__ == '__main__':
     #t = Track( "example_songs/spirited_away_intro.json" )

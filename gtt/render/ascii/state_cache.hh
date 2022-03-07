@@ -26,6 +26,7 @@ public:
 
     // save this state
     all_states_.push_front( state );
+    current_iter_ = all_states_.begin();
   }
 
   std::string
@@ -39,7 +40,8 @@ public:
 
   std::string
   undo(){
-    if( current_iter_ != all_states_.end() ){
+    //if( all_states_.empty() ) return "";
+    if( current_iter_ != all_states_.end() and std::next(current_iter_) != all_states_.end() ){
       ++current_iter_;
     }
     return *current_iter_;
@@ -51,6 +53,10 @@ public:
       --current_iter_;
     }
     return *current_iter_;
+  }
+
+  auto size() const {
+    return all_states_.size();
   }
 
 private:

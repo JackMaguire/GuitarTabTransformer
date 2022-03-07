@@ -255,5 +255,6 @@ PYBIND11_MODULE(gtt, m) {
       state_cache.def( "get_current_state", &StateCache::get_current_state );
       state_cache.def( "undo", &StateCache::undo );
       state_cache.def( "redo", &StateCache::redo );
+      state_cache.def( "size", &StateCache::size );
     }
 }
