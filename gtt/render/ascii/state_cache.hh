@@ -9,14 +9,14 @@ namespace ascii {
 
 class StateCache{
 public:
+  StateCache( std::string const & state ){
+    all_states_.push_front( state );
+    current_iter_ = all_states_.begin();
+  }
+
   void
   register_new_state( std::string const & state ){
-    // handle empty option
-    if( all_states_.empty() ){
-      all_states_.push_front( state );
-      current_iter_ = all_states_.begin();
-      return;
-    }
+    //Can't be empty
 
     // skip non-updates
     if( *current_iter_ == state ) return;

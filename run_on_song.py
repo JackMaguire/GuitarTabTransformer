@@ -163,9 +163,7 @@ def main( stdscr ):
 
         stdscr.move( y, x )
 
-    sc = StateCache()
-    sc.register_new_state( save_to_str( track, settings ) )
-    assert( len(sc.get_current_state()) > 0 )
+    sc = StateCache( save_to_str( track, settings ) )
 
     while True:
         cursoryx = stdscr.getyx()
@@ -190,6 +188,7 @@ def main( stdscr ):
         # Cursor Movement:
         if k in ( ' ', ):
             settings.toggle_mode()
+            continue # no save
         elif k in ( left, right, up, down ) or strk in 'WASDwasd':
             handle_move( k, stdscr, moveto )
             continue # no save
@@ -214,7 +213,6 @@ def main( stdscr ):
             continue # no save
 
         sc.register_new_state( save_to_str( track, settings ) )
-        assert( len(sc.get_current_state()) > 0 )
 
 if __name__ == '__main__':
     #t = Track( "example_songs/spirited_away_intro.json" )

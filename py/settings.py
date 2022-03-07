@@ -22,7 +22,7 @@ class Settings:
         #self.mode = self.possible_modes[0]x
 
         # UNSERIALIZED:
-        self.state_cache = StateCache()
+        #self.state_cache = StateCache()
 
     def mode_str( self ):
         return self.possible_modes[ self.mode_index ]
