@@ -65,12 +65,12 @@ def draw_text_at_top(
     next_str = "SAVE"
     stdscr.addstr( y, x, next_str, curses.color_pair(2) )
     add_action( x, next_str, SaveJsonPlease() )
-    x += len( next_str ) + 4
+    x += len( next_str ) + 2
 
     next_str = "UNDO"
     stdscr.addstr( y, x, next_str, curses.color_pair(3) )
     add_action( x, next_str, Undo() )
-    x += len( next_str ) + 4
+    x += len( next_str ) + 2
 
     next_str = "REDO"
     stdscr.addstr( y, x, next_str, curses.color_pair(4) )

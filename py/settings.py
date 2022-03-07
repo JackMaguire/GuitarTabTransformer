@@ -1,5 +1,6 @@
 import gtt
 from gtt import *
+from gtt.render.ascii import StateCache
 
 #from json import json
 
@@ -19,6 +20,9 @@ class Settings:
         self.possible_modes = [ "VIEW", "EDIT", "ADD_NOTES" ]
         self.mode_index = 0
         #self.mode = self.possible_modes[0]x
+
+        # UNSERIALIZED:
+        self.state_cache = StateCache()
 
     def mode_str( self ):
         return self.possible_modes[ self.mode_index ]

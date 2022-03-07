@@ -151,6 +151,10 @@ def main( stdscr ):
         track = Track( "example_songs/spirited_away_intro.json" )
         settings = Settings( track )
 
+    def save():
+        settings.state_cache.register_new_state( save_to_str( track, settings ) )
+    save()
+        
     def moveto( y, x ):
         maxy, maxx = stdscr.getmaxyx()
 
@@ -188,6 +192,7 @@ def main( stdscr ):
             settings.toggle_mode()
         elif k in ( left, right, up, down ) or strk in 'WASDwasd':
             handle_move( k, stdscr, moveto )
+            continue # no save
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
@@ -201,8 +206,10 @@ def main( stdscr ):
         elif settings.mode_str() == "EDIT" and strk == '\n':
             action = local_actions.get_action( y=y, x=x )
             if action != None: action.handle_enter( track, settings )
-            
+        else:
+            continue # no save
 
+        save()
 
 if __name__ == '__main__':
     #t = Track( "example_songs/spirited_away_intro.json" )
