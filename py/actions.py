@@ -103,7 +103,7 @@ class SaveJsonPlease( Action ):
     def handle_string_entry( self, track, settings, setting_str ):
         try:
             filename = setting_str.strip().rstrip()
-            save_data = save_to_file( filename, track, settings )
+            save_to_file( filename, track, settings )
         except Exception as e:
             try:
                 save_to_file( "/tmp/gtt_save.json", track, settings )
