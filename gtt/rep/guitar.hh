@@ -172,6 +172,25 @@ public:
       "B/0"
     });
   }
+
+  static
+  Guitar
+  make_guitar( std::string const & name ){
+    if( name == "standard_guitar" ) return standard_guitar();
+    if( name == "dropD_guitar" ) return dropD_guitar();
+    if( name == "standard_seven_string_guitar" ) return standard_seven_string_guitar();
+
+    if( name == "standard_bass_guitar" ) return standard_bass_guitar();
+    if( name == "dropD_bass_guitar" ) return dropD_bass_guitar();
+    if( name == "standard_five_string_bass_guitar" ) return standard_five_string_bass_guitar();
+
+    // shorthand
+    if( name == "6str" ) return standard_guitar();
+    if( name == "7str" ) return standard_seven_string_guitar();
+    if( name == "4bass" ) return standard_bass_guitar();
+    if( name == "5bass" ) return standard_five_string_bass_guitar();
+  }
+  
 };
 
 void

@@ -209,6 +209,7 @@ PYBIND11_MODULE(gtt, m) {
     track.def( py::init<>() );
     track.def( py::init< Track const & >() );
     track.def( py::init< std::string >() );
+    track.def( py::init< int, std::string >() );
 
     track.def_readwrite( "guitar", &Track::guitar );
     track.def_readwrite( "measures", &Track::measures );

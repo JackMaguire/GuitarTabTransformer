@@ -34,6 +34,11 @@ struct Track {
     load_from_file( filename );
   }
 
+  Track( int const nmeasures, std::string const & guitarname ){
+    measures.resize( nmeasures );
+    guitar = GuitarFactory::make_guitar( guitarname );
+  }
+
   void
   save_to_file( std::string const & filename ) const {
     json j;
