@@ -67,11 +67,16 @@ def draw_text_at_top(
     add_action( x, next_str, SaveJsonPlease() )
     x += len( next_str ) + 2
 
-def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar ):
-    j_offset = int( index / settings.m_per_row )
+def calc_m_per_row( measure_width, maxx ):
+    return int( (maxx-6) / (measure_width+1) )
+
+def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar, maxx ):
+    m_per_row = calc_m_per_row( mbox_settings.measure_width, maxx )
+
+    j_offset = int( index / m_per_row )
     y = 3 + j_offset*(settings.row_gap+g.size())
 
-    i_offset = index % settings.m_per_row
+    i_offset = index % m_per_row
     x = settings.x_gap + i_offset*(mbox_settings.measure_width+1)
 
     newline = i_offset==0
@@ -102,7 +107,8 @@ def draw_measure(
         m_index: int,
         settings: Settings,
         cursoryx,
-        local_actions
+        local_actions,
+        spacial_m_position
 ):
     noteless_color = curses.color_pair(242)
 
@@ -114,8 +120,13 @@ def draw_measure(
     mbox_settings.measure_width = settings.active_measure_width
 
     mbox = MeasureBox( m, g, mbox_settings )
+    maxy, maxx = stdscr.getmaxyx()
 
-    start_x, start_y, is_newline = measure_ind_to_xy( m_index, settings, mbox_settings, g )
+    start_x, start_y, is_newline = measure_ind_to_xy( spacial_m_position, settings, mbox_settings, g, maxx )
+
+    stop_y = start_y + mbox.height()
+    if stop_y > maxy:
+        return
 
     fm = FloatingMeasure( mbox, mbox_settings, start_x, start_y, is_newline )
 
@@ -154,10 +165,14 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
 
     all_fms = []
 
+    n_measures_skipped = settings.n_rows_skipped * calc_m_per_row( settings.active_measure_width, maxx )
+
     count = 0
     g = track.guitar
     for m in track.measures:
-        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx, local_actions ) )
+        if count < n_measures_skipped:
+            continue
+        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx, local_actions, count-n_measures_skipped ) )
         count += 1
     
     return all_fms, local_actions

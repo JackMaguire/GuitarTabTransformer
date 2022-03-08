@@ -10,10 +10,10 @@ class Settings:
 
         self.active_measure_width = 8 * track.time_signature.beats_per_measure()
 
-        self.m_per_row = 3
+        #self.m_per_row = 3
         self.row_gap = 3
-
         self.x_gap = 6
+        self.n_rows_skipped = 0
 
         self.possible_modes = [ "VIEW", "EDIT", "ADD_NOTES" ]
         self.mode_index = 0
@@ -40,7 +40,7 @@ class Settings:
     def serialize( self ):
         return {
             "self.active_measure_width" : self.active_measure_width,
-            "self.m_per_row" : self.m_per_row,
+            "self.n_rows_skipped" : self.n_rows_skipped,
             "self.row_gap" : self.row_gap,
             "self.x_gap" : self.x_gap,
             "self.mode" : self.possible_modes[ self.mode_index ]
@@ -50,8 +50,8 @@ class Settings:
     def deserialize( self, settings_json ):
         if "self.active_measure_width" in settings_json:
             self.active_measure_width = settings_json[ "self.active_measure_width" ]
-        if "self.m_per_row" in settings_json:
-            self.m_per_row = settings_json[ "self.m_per_row" ]
+        if "self.n_rows_skipped" in settings_json:
+            self.n_rows_skipped = settings_json[ "self.n_rows_skipped" ]
         if "self.row_gap" in settings_json:
             self.row_gap = settings_json[ "self.row_gap" ]
         if "self.x_gap" in settings_json:
