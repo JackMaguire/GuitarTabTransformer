@@ -130,19 +130,14 @@ def draw_measure(
             add_over_range( local_actions, y, x, s, StringChanger(i) )
 
 
-    selected = fm.cursor_is_in_box( cursoryx ) and settings.mode_str() == "ADD_NOTES"
+    #selected = fm.cursor_is_in_box( cursoryx ) and settings.mode_str()=="ADD_NOTES"
 
     for j in range( 0, mbox.height() ):
         y = start_y + j
         for i in range( 0, mbox.width() ):
             x = start_x + i
-            #print( x, y )
-            #time.sleep( 10 )
             chardata = mbox.at( i, j )
-            if selected:
-                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+4) )
-            else:
-                stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
+            stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
             if chardata.note_index >= 0:
                 local_actions.set_action( y=y, x=x, action=ExistingNoteAction( m_index, chardata.note_index ) )
 
