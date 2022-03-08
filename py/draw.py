@@ -171,8 +171,15 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
     g = track.guitar
     for m in track.measures:
         if count < n_measures_skipped:
+            count += 1
             continue
-        all_fms.append( draw_measure( stdscr, track, count, settings, cursoryx, local_actions, count-n_measures_skipped ) )
+
+        #print( count )
+        #time.sleep( 1 )
+
+        fm = draw_measure( stdscr, track, count, settings, cursoryx, local_actions, count-n_measures_skipped )
+        if fm != None:
+            all_fms.append( fm ) 
         count += 1
     
     return all_fms, local_actions

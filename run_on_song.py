@@ -213,6 +213,10 @@ def main( stdscr ):
             load_from_str( sc.undo(), track, settings )
         elif strk == 'R':
             load_from_str( sc.redo(), track, settings )
+        elif strk == '>':
+            settings.n_rows_skipped += 1
+        elif strk == '<':
+            settings.n_rows_skipped = max( 0, settings.n_rows_skipped - 1 )
         else:
             continue # no save
 
