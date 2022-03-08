@@ -67,18 +67,6 @@ def draw_text_at_top(
     add_action( x, next_str, SaveJsonPlease() )
     x += len( next_str ) + 2
 
-    '''
-    next_str = "UNDO"
-    stdscr.addstr( y, x, next_str, curses.color_pair(3) )
-    add_action( x, next_str, Undo() )
-    x += len( next_str ) + 2
-
-    next_str = "REDO"
-    stdscr.addstr( y, x, next_str, curses.color_pair(4) )
-    add_action( x, next_str, Redo() )
-    x += len( next_str ) + 4
-    '''
-
 def measure_ind_to_xy( index, settings: Settings, mbox_settings, g: gtt.Guitar ):
     j_offset = int( index / settings.m_per_row )
     y = 3 + j_offset*(settings.row_gap+g.size())
@@ -155,15 +143,6 @@ def draw_measure(
                 stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+4) )
             else:
                 stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
-
-    ############
-    # draw rests
-    if False:
-        rests = m.compute_rests()
-        for r in rests:
-            x = start_x + settings.measure_buffer + int( settings.active_measure_width * r.starting_point )
-            for y in range( start_y, end_y ):
-                stdscr.addch( y, x, '~' )
 
     return fm
 
