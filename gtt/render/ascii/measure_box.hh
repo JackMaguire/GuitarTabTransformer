@@ -46,6 +46,7 @@ public:
     //constexpr ~CharVal() = default;
 
     int color = 0;
+    short int note_index = -1;
     char c;
   };
 
@@ -109,7 +110,7 @@ MeasureBox::initialize(
   settings_ = settings;
 
   // create empty string
-  CharVal const empty_note({ 242, '-' });
+  CharVal const empty_note({ 242, 0, '-' });
   std::vector const empty_string( settings_.measure_width, empty_note );
   render_.resize( g.size(), empty_string );
 
@@ -121,6 +122,7 @@ MeasureBox::initialize(
   }
 
   // draw notes
+  char note_index = 0;
   for( rep::MeasureNote const & mnote : *measure ){
     int const y = mnote.string_assignment;
     int const x = int( settings_.measure_width * mnote.starting_point );
@@ -130,6 +132,7 @@ MeasureBox::initialize(
     if( fret_str.size() == 1 ){
       render_[y][x].c = fret_str[ 0 ];
       render_[y][x].color = 0;
+      render_[y][x].note_index = note_index;
     } else {
       GTT_ASSERT_EQUALS( fret_str.size(), 2 );
       if( x == 0 ){
@@ -137,13 +140,19 @@ MeasureBox::initialize(
 	render_[y][x+1].c = fret_str[ 1 ];
 	render_[y][x].color = 0;
 	render_[y][x+1].color = 0;
+	render_[y][x].note_index = note_index;
+	render_[y][x+1].note_index = note_index;
       } else {
 	render_[y][x-1].c = fret_str[ 0 ];
 	render_[y][x].c = fret_str[ 1 ];
 	render_[y][x-1].color = 0;
 	render_[y][x].color = 0;
+	render_[y][x-1].note_index = note_index;
+	render_[y][x].note_index = note_index;
       }
     }
+
+    ++note_index;
   }
 }
 

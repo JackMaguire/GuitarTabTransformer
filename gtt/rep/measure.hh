@@ -157,6 +157,20 @@ public:
     notes_in_order_.insert( mn );
   }
 
+  void
+  remove( int const index ){
+    notes_in_order_.erase( std::next( notes_in_order_.begin(), index ) );
+  }
+
+public: //quality of life in python
+  void
+  change_string_assignment( int const index, int const assignment ){
+    MeasureNote copy = (*this)[index];
+    remove( index );
+    copy.string_assignment = assignment;
+    add( copy );
+  }
+
 public: //serialization
   void
   serialize( json & j ) const {

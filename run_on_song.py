@@ -205,6 +205,9 @@ def main( stdscr ):
         elif strk == '\n':
             action = local_actions.get_action( y=y, x=x )
             if action != None: action.handle_enter( track, settings )
+        elif k == curses.KEY_BACKSPACE:
+            action = local_actions.get_action( y=y, x=x )
+            if action != None: action.handle_delete( track, settings )
         elif strk == 'U':
             load_from_str( sc.undo(), track, settings )
         elif strk == 'R':

@@ -143,6 +143,8 @@ def draw_measure(
                 stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color+4) )
             else:
                 stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
+            if chardata.note_index >= 0:
+                local_actions.set_action( y=y, x=x, action=ExistingNoteAction( m_index, chardata.note_index ) )
 
     return fm
 

@@ -191,6 +191,9 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "compute_rests", &Measure::compute_rests );
     measure.def( "set", &Measure::set );
     measure.def( "add", &Measure::add );
+    measure.def( "remove", &Measure::remove );
+
+    measure.def( "change_string_assignment", &Measure::change_string_assignment );
 
     measure.def( "serialize", &Measure::serialize );
     measure.def( "deserialize", &Measure::deserialize );
@@ -241,6 +244,7 @@ PYBIND11_MODULE(gtt, m) {
       mboxcv.def_readwrite( "color", &MeasureBox::CharVal::color );
       mboxcv.def_readwrite( "c", &MeasureBox::CharVal::c );
       mboxcv.def_readwrite( "char", &MeasureBox::CharVal::c );
+      mboxcv.def_readwrite( "note_index", &MeasureBox::CharVal::note_index );
 
       py::class_< MeasureBox > mbox( ascii, "MeasureBox" );
       mbox.def( py::init< gtt::rep::Measure *, gtt::rep::Guitar const &, MeasureBoxSettings const & >() );
