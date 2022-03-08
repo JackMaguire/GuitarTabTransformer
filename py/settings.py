@@ -39,7 +39,6 @@ class Settings:
 
     def serialize( self ):
         return {
-            "self.measure_buffer" : self.measure_buffer,
             "self.active_measure_width" : self.active_measure_width,
             "self.m_per_row" : self.m_per_row,
             "self.row_gap" : self.row_gap,
@@ -49,8 +48,6 @@ class Settings:
 
     
     def deserialize( self, settings_json ):
-        if "self.measure_buffer" in settings_json:
-            self.measure_buffer = settings_json[ "self.measure_buffer" ]
         if "self.active_measure_width" in settings_json:
             self.active_measure_width = settings_json[ "self.active_measure_width" ]
         if "self.m_per_row" in settings_json:

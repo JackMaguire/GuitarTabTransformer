@@ -12,6 +12,7 @@ import time
 from py.settings import Settings
 from py.draw import draw_track
 from py.saveload import load_from_file, save_to_str, load_from_str
+from py.colors import *
 
 import argparse
 

@@ -189,6 +189,8 @@ public:
     if( name == "7str" ) return standard_seven_string_guitar();
     if( name == "4bass" ) return standard_bass_guitar();
     if( name == "5bass" ) return standard_five_string_bass_guitar();
+
+    return standard_guitar();
   }
   
 };
