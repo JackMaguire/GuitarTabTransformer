@@ -5,7 +5,9 @@ from gtt.render.ascii import StateCache
 #from json import json
 
 class Settings:
-    def __init__(self, track: gtt.Track):
+    def __init__(self, track: gtt.Track, stdscr ):
+        self.stdscr = stdscr
+
         self.active_measure_width = 8 * track.time_signature.beats_per_measure()
 
         self.m_per_row = 3
@@ -15,6 +17,19 @@ class Settings:
 
         self.possible_modes = [ "VIEW", "EDIT", "ADD_NOTES" ]
         self.mode_index = 0
+
+    def move_cursor( self, dy, dx=0 ):
+        y, x = self.stdscr.getyx()
+        y = y+dy
+        x = x+dx
+
+        maxy, maxx = self.stdscr.getmaxyx()
+        if y > maxy-1: y = maxy-1
+        elif y < 1: y = 1
+        if x > maxx-1: x = maxx-1
+        elif x < 1: x = 1
+
+        self.stdscr.move( y, x )
 
     def mode_str( self ):
         return self.possible_modes[ self.mode_index ]

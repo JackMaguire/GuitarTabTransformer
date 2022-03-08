@@ -146,11 +146,11 @@ def main( stdscr ):
 
     if args.load:
         track = Track()
-        settings = Settings( track )
+        settings = Settings( track, stdscr )
         load_from_file( args.load, track, settings )
     else:
         track = Track( "example_songs/spirited_away_intro.json" )
-        settings = Settings( track )
+        settings = Settings( track, stdscr )
         
     def moveto( y, x ):
         maxy, maxx = stdscr.getmaxyx()

@@ -122,10 +122,9 @@ class ExistingNoteAction( Action ):
     def handle_increment( self, track, settings ):
         if settings.mode_str() == "EDIT":
             curr_ass = track.measures[ self.measure_ind ][ self.note_ind ].string_assignment
-            #print( curr_ass )
-            #time.sleep( 2 )
             if curr_ass+1 < track.guitar.size():
                 track.measures[ self.measure_ind ].change_string_assignment( self.note_ind, curr_ass+1 )
+                settings.move_cursor( 1 )
 
 
     def handle_decrement( self, track, settings ):
@@ -133,7 +132,7 @@ class ExistingNoteAction( Action ):
             curr_ass = track.measures[ self.measure_ind ][ self.note_ind ].string_assignment
             if curr_ass > 0:
                 track.measures[ self.measure_ind ].change_string_assignment( self.note_ind, curr_ass-1 )
-
+                settings.move_cursor( -1 )
 
     def handle_enter( self, track, settings ):
         pass
