@@ -140,3 +140,15 @@ class ExistingNoteAction( Action ):
     def handle_delete( self, track, settings ):
         if settings.mode_str() == "ADD_NOTES":
             track.measures[ self.measure_ind ].remove( self.note_ind )
+
+class AddAnnotation( Action ):
+    def __init__( self, measure_ind, starting_point ):
+        self.measure_ind = measure_ind
+        self.starting_point = starting_point
+
+    def handle_string_entry( self, track, settings, setting_str ):
+        ann = MeasureAnnotation()
+        ann.text = setting_str
+        ann.starting_point = self.starting_point
+        ann.color = 0
+        track.measures[ self.measure_ind ].add_annotation( ann )

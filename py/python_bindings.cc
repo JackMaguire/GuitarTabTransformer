@@ -176,6 +176,7 @@ PYBIND11_MODULE(gtt, m) {
     mann.def( py::init<>() );
     mann.def_readwrite( "text", &MeasureAnnotation::text );
     mann.def_readwrite( "starting_point", &MeasureAnnotation::starting_point );
+    mann.def_readwrite( "color", &MeasureAnnotation::color );
 
     py::class_< Measure > measure( m, "Measure" );
     measure.def( py::init<>() );

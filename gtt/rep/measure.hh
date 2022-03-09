@@ -267,10 +267,12 @@ public: //serialization
       notes_in_order_.emplace( j[ std::to_string(i) ] );
     }
 
-    int const ann_count = j[ "ann_count" ];
-    for( int i = count; i < ann_count; ++i ){
-      json const j2 = j[ std::to_string(i) ];
-      annotations_.emplace_back( j[ std::to_string(i) ] );
+    if( j.contains( "ann_count" ) ){
+      int const ann_count = j[ "ann_count" ];
+      for( int i = count; i < ann_count; ++i ){
+	json const j2 = j[ std::to_string(i) ];
+	annotations_.emplace_back( j[ std::to_string(i) ] );
+      }
     }
   }
 

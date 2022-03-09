@@ -154,8 +154,10 @@ def draw_measure(
 
     # annotation actions
     for i in range( 0, mbox.width() ):
-        # TODO
-        pass
+        starting_point = float(i) / float(mbox.width())
+        if i+1 == mbox.width():
+            starting_point = 0.99
+        local_actions.set_action( y=start_y, x=start_x+i, action=AddAnnotation( m_index, starting_point ) )
 
     return fm
 

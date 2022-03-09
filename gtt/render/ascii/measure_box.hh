@@ -122,8 +122,8 @@ MeasureBox::initialize(
     int const x = int( settings_.measure_width * ann.starting_point ) - ann.text.size() + 1;
     constexpr int y = 0;
     for( uint i = 0; i < ann.text.size(); ++i ){
-      render_[y][x].c = ann.text[ 0 ];
-      render_[y][x].color = ann.color;
+      render_[y][x+i].c = ann.text[ i ];
+      render_[y][x+i].color = ann.color;
     }
   }
 
