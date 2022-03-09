@@ -108,6 +108,31 @@ struct MeasureNote {
   signed char string_assignment = 0;
 };
 
+struct MeasureAnnotation {
+  bool
+  operator< ( MeasureAnnotation const & other ) const {
+    if( starting_point != other.starting_point )
+      return starting_point < other.starting_point;
+
+    return text < other.text;
+  }
+
+  void
+  serialize( json & j ) const {
+    j[ "text" ] = text;
+    j[ "starting_point" ] = starting_point;
+  }
+
+  void
+  deserialize( json const & j ) {
+    text = j[ "text" ];
+    starting_point = j[ "starting_point" ];
+  }
+
+  std::string text;
+  float starting_point;
+};
+
 class Measure {
 public:
   Measure() = default;
@@ -162,6 +187,27 @@ public:
     notes_in_order_.erase( std::next( notes_in_order_.begin(), index ) );
   }
 
+public: //annotations
+  void
+  add_annotation( MeasureAnnotation const & ann ){
+    annotations_.push_back( ann );
+  }
+
+  auto
+  n_annotations() const {
+    return annotations_.size();
+  }
+
+  void
+  remove_annotation( int const index ){
+    annotations_.erase( std::next( annotations_.begin(), index ) );
+  }
+
+  MeasureAnnotation &
+  get_annotation( int const index ) {
+    return annotations_[ index ];
+  }
+
 public: //quality of life in python
   void
   change_string_assignment( int const index, int const assignment ){
@@ -197,6 +243,7 @@ public: //serialization
 
 private:
   std::set< MeasureNote > notes_in_order_; //inefficient but portable
+  std::vector< MeasureAnnotation > annotations_;
 };
 
 std::set< MeasureNote >

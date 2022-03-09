@@ -172,6 +172,10 @@ PYBIND11_MODULE(gtt, m) {
     mnote.def_readwrite( "string_assignment", &MeasureNote::string_assignment );
 
 
+    py::class_< MeasureAnnotation > mann( m, "MeasureAnnotation" );
+    mann.def( py::init<>() );
+    mann.def_readwrite( "text", &MeasureAnnotation::text );
+    mann.def_readwrite( "starting_point", &MeasureAnnotation::starting_point );
 
     py::class_< Measure > measure( m, "Measure" );
     measure.def( py::init<>() );
@@ -192,8 +196,12 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "set", &Measure::set );
     measure.def( "add", &Measure::add );
     measure.def( "remove", &Measure::remove );
-
     measure.def( "change_string_assignment", &Measure::change_string_assignment );
+
+    measure.def( "add_annotation", &Measure::add_annotation );
+    measure.def( "n_annotations", &Measure::n_annotations );
+    measure.def( "remove_annotation", &Measure::remove_annotation );
+    measure.def( "get_annotation", &Measure::get_annotation );
 
     measure.def( "serialize", &Measure::serialize );
     measure.def( "deserialize", &Measure::deserialize );
