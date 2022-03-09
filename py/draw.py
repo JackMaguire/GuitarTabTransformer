@@ -132,7 +132,7 @@ def draw_measure(
 
     if is_newline:
         for i in range( 0, g.size() ):
-            y = start_y + i
+            y = start_y + i + 1
             x = 2
             s = g.get_string(i).open_string_note().as_string()
             if len(s) > 3:
@@ -151,6 +151,11 @@ def draw_measure(
             stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
             if chardata.note_index >= 0:
                 local_actions.set_action( y=y, x=x, action=ExistingNoteAction( m_index, chardata.note_index ) )
+
+    # annotation actions
+    for i in range( 0, mbox.width() ):
+        # TODO
+        pass
 
     return fm
 

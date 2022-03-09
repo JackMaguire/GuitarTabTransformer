@@ -112,11 +112,24 @@ MeasureBox::initialize(
   // create empty string
   CharVal const empty_note({ 242, 0, '-' });
   std::vector const empty_string( settings_.measure_width, empty_note );
-  render_.resize( g.size(), empty_string );
+  render_.resize( g.size()+1, empty_string );
+
+  //annotation_line
+  CharVal const empty_ann({ 242, 0, ' ' });
+  std::vector const empty_ann_str( settings_.measure_width, empty_ann );
+  render_[0] = empty_ann_str;
+  for( auto const & ann : measure->get_annotations() ){
+    int const x = int( settings_.measure_width * ann.starting_point ) - ann.text.size() + 1;
+    constexpr int y = 0;
+    for( uint i = 0; i < ann.text.size(); ++i ){
+      render_[y][x].c = ann.text[ 0 ];
+      render_[y][x].color = ann.color;
+    }
+  }
 
   // color the beats
   for( int const x : settings_.beat_positions() ){
-    for( uint y = 0; y < g.size(); ++y ){
+    for( uint y = 1; y <= g.size(); ++y ){
       render_[y][x].color = 252;
     }
   }
@@ -124,9 +137,9 @@ MeasureBox::initialize(
   // draw notes
   char note_index = 0;
   for( rep::MeasureNote const & mnote : *measure ){
-    int const y = mnote.string_assignment;
+    int const y = mnote.string_assignment+1;
     int const x = int( settings_.measure_width * mnote.starting_point );
-    int const fret = g[ y ].get_fret( mnote.note );
+    int const fret = g[ mnote.string_assignment ].get_fret( mnote.note );
     std::string const fret_str = std::to_string( fret );
 
     if( fret_str.size() == 1 ){
@@ -154,8 +167,8 @@ MeasureBox::initialize(
 
     ++note_index;
   }
+  
 }
-
 
 void
 MeasureBox::run_unit_tests(){

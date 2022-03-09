@@ -109,6 +109,16 @@ struct MeasureNote {
 };
 
 struct MeasureAnnotation {
+
+  MeasureAnnotation() = default;
+  //MeasureAnnotation( MeasureAnnotation const & ) = default;
+  //MeasureAnnotation( MeasureAnnotation && ) = default;
+
+  MeasureAnnotation( json const & j ){
+    deserialize( j );
+  }
+
+
   bool
   operator< ( MeasureAnnotation const & other ) const {
     if( starting_point != other.starting_point )
@@ -121,16 +131,19 @@ struct MeasureAnnotation {
   serialize( json & j ) const {
     j[ "text" ] = text;
     j[ "starting_point" ] = starting_point;
+    j[ "color" ] = color;
   }
 
   void
   deserialize( json const & j ) {
     text = j[ "text" ];
     starting_point = j[ "starting_point" ];
+    color = j[ "color" ];
   }
 
   std::string text;
   float starting_point;
+  int color = 3;
 };
 
 class Measure {
@@ -208,6 +221,11 @@ public: //annotations
     return annotations_[ index ];
   }
 
+  auto const &
+  get_annotations() const {
+    return annotations_;
+  }
+
 public: //quality of life in python
   void
   change_string_assignment( int const index, int const assignment ){
@@ -227,6 +245,16 @@ public: //serialization
       j[ std::to_string(count++) ] = j2;
     }
     j[ "count" ] = count;
+    
+    for( MeasureAnnotation const & ann : annotations_ ){
+      json j2;
+      ann.serialize( j2 );
+      j[ std::to_string(count++) ] = j2;
+    }
+    j[ "ann_count" ] = count;
+
+
+    j[ "total_count" ] = count;
   }
 
   void
@@ -237,6 +265,12 @@ public: //serialization
     for( int i = 0; i < count; ++i ){
       json const j2 = j[ std::to_string(i) ];
       notes_in_order_.emplace( j[ std::to_string(i) ] );
+    }
+
+    int const ann_count = j[ "ann_count" ];
+    for( int i = count; i < ann_count; ++i ){
+      json const j2 = j[ std::to_string(i) ];
+      annotations_.emplace_back( j[ std::to_string(i) ] );
     }
   }
 
