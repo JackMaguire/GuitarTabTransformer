@@ -137,7 +137,7 @@ MeasureBox::initialize(
       render_[y][x+i].c = ann.text[ i ];
       render_[y][x+i].color = ann.color;
 
-      ann_for_cell_[i] = ann_index;
+      ann_for_cell_[x+i] = ann_index;
     }
   }
 

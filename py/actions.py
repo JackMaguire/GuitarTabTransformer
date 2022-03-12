@@ -163,7 +163,7 @@ class EditAnnotation( Action ):
             track.measures[ self.measure_ind ].remove_annotation( self.ann_index )
 
     def handle_increment( self, track, settings ):
-        print( 1 )
-        time.sleep( 3 )
+        #print( 1 )
+        #time.sleep( 3 )
         if settings.mode_str() == "ADD_NOTES":
             track.measures[self.measure_ind].toggle_annotation_color(self.ann_index)
