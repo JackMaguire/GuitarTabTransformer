@@ -11,7 +11,7 @@ class Settings:
         self.active_measure_width = 8 * track.time_signature.beats_per_measure()
 
         #self.m_per_row = 3
-        self.row_gap = 3
+        self.row_gap = 2
         self.x_gap = 6
         self.n_rows_skipped = 0
 
