@@ -262,6 +262,7 @@ PYBIND11_MODULE(gtt, m) {
       mbox.def( "width", &MeasureBox::width );
       mbox.def( "height", &MeasureBox::height );
       mbox.def( "add_note", &MeasureBox::add_note );
+      mbox.def( "annotation_index_for_cell", &MeasureBox::annotation_index_for_cell );
 
       py::class_< StateCache > state_cache( ascii, "StateCache" );
       state_cache.def( py::init< std::string const & >() );

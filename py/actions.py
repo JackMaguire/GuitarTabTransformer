@@ -152,3 +152,17 @@ class AddAnnotation( Action ):
         ann.starting_point = self.starting_point
         ann.color = 0
         track.measures[ self.measure_ind ].add_annotation( ann )
+
+class EditAnnotation( Action ):
+    def __init__( self, measure_ind, ann_index ):
+        self.measure_ind = measure_ind
+        self.ann_index = ann_index
+
+    def handle_delete( self, track, settings ):
+        if settings.mode_str() == "ADD_NOTES":
+            track.measures[ self.measure_ind ].remove_annotation( self.ann_index )
+
+    def handle_increment( self, track, settings ):
+        if settings.mode_str() == "ADD_NOTES":
+            new_color = track.measures[ self.measure_ind ].get_annotation( self.ann_index ).color+1 % 10
+            track.measures[ self.measure_ind ].get_annotation( self.ann_index ).color = new_color

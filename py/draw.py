@@ -154,10 +154,15 @@ def draw_measure(
 
     # annotation actions
     for i in range( 0, mbox.width() ):
-        starting_point = float(i) / float(mbox.width())
-        if i+1 == mbox.width():
-            starting_point = 0.99
-        local_actions.set_action( y=start_y, x=start_x+i, action=AddAnnotation( m_index, starting_point ) )
+        ann_index = mbox.annotation_index_for_cell( i );
+        if ann_index >= 0:
+            local_actions.set_action( y=start_y, x=start_x+i, action=EditAnnotation( m_index, ann_index ) )
+        else:
+            starting_point = float(i) / float(mbox.width())
+            if i+1 == mbox.width():
+                starting_point = 0.99
+            local_actions.set_action( y=start_y, x=start_x+i, action=AddAnnotation( m_index, starting_point ) )
+            
 
     return fm
 
@@ -180,9 +185,6 @@ def draw_track( stdscr, track, cursoryx, settings: Settings ):
         if count < n_measures_skipped:
             count += 1
             continue
-
-        #print( count )
-        #time.sleep( 1 )
 
         fm = draw_measure( stdscr, track, count, settings, cursoryx, local_actions, count-n_measures_skipped )
         if fm != None:

@@ -82,6 +82,12 @@ public:
   static
   void run_unit_tests();
 
+public:
+  //python helper
+  int
+  annotation_index_for_cell( int const x ) const {
+    return ann_for_cell_[ x ];
+  }
 
 protected:
   void
@@ -93,6 +99,7 @@ protected:
 
 private:
   std::vector< std::vector< CharVal > > render_;
+  std::vector< int > ann_for_cell_;
 
   MeasureBoxSettings settings_;
   rep::Measure * measure_; //not an owner
@@ -118,12 +125,19 @@ MeasureBox::initialize(
   CharVal const empty_ann({ 242, 0, ' ' });
   std::vector const empty_ann_str( settings_.measure_width, empty_ann );
   render_[0] = empty_ann_str;
+
+  ann_for_cell_.assign( settings_.measure_width, -1 );
+  int ann_index = -1;
   for( auto const & ann : measure->get_annotations() ){
+    ++ann_index;
+
     int const x = int( settings_.measure_width * ann.starting_point ) - ann.text.size() + 1;
     constexpr int y = 0;
     for( uint i = 0; i < ann.text.size(); ++i ){
       render_[y][x+i].c = ann.text[ i ];
       render_[y][x+i].color = ann.color;
+
+      ann_for_cell_[i] = ann_index;
     }
   }
 
