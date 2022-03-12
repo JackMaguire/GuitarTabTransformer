@@ -113,7 +113,7 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     else:
         fm = fm[0]
 
-    str_index = y - fm.start_y
+    str_index = y - fm.start_y - 1
     #g = track.guitar
     s = track.guitar.get_string( str_index )
     fret = char_to_fret( k, stdscr )
