@@ -164,5 +164,4 @@ class EditAnnotation( Action ):
 
     def handle_increment( self, track, settings ):
         if settings.mode_str() == "ADD_NOTES":
-            new_color = track.measures[ self.measure_ind ].get_annotation( self.ann_index ).color+1 % 10
-            track.measures[ self.measure_ind ].get_annotation( self.ann_index ).color = new_color
+            track.measures[self.measure_ind].toggle_annotation_color(self.ann_index)

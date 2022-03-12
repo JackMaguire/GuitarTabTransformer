@@ -203,6 +203,8 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "n_annotations", &Measure::n_annotations );
     measure.def( "remove_annotation", &Measure::remove_annotation );
     measure.def( "get_annotation", &Measure::get_annotation );
+    measure.def( "get_annotations", &Measure::get_annotations );
+    measure.def( "toggle_annotation_color", &Measure::toggle_annotation_color );
 
     measure.def( "serialize", &Measure::serialize );
     measure.def( "deserialize", &Measure::deserialize );

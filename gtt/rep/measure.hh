@@ -226,6 +226,11 @@ public: //annotations
     return annotations_;
   }
 
+  void
+  toggle_annotation_color( int const index ){
+    annotations_[ index ].color = (annotations_[ index ].color+1) % 10;
+  }
+
 public: //quality of life in python
   void
   change_string_assignment( int const index, int const assignment ){

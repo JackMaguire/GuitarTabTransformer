@@ -175,16 +175,21 @@ def main( stdscr ):
         stdscr.refresh()
         k = stdscr.get_wch()
         strk = str(k)
-
+           
         #print( k )
         #time.sleep( 10 )
-
-        y, x = stdscr.getyx()
 
         down = 258
         up = 259
         left = 260
         right = 261
+
+        while k in ( left, right, up, down ) or strk in 'WASDwasd':
+            handle_move( k, stdscr, moveto ) 
+            k = stdscr.get_wch()
+            strk = str(k)
+
+        y, x = stdscr.getyx()
 
         # Cursor Movement:
         if k in ( ' ', ):
@@ -193,12 +198,14 @@ def main( stdscr ):
         elif k in ( left, right, up, down ) or strk in 'WASDwasd':
             handle_move( k, stdscr, moveto )
             continue # no save
+        elif settings.mode_str() == "VIEW":
+            continue # no save
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
             moveto( *cursoryx )
-        elif settings.mode_str() == "EDIT" and strk == '+':
+        elif strk == '+':
             prompt_for_local_action( stdscr, local_actions, track, settings )
-        elif settings.mode_str() == "EDIT" and strk in '{}':
+        elif strk in '{}':
             action = local_actions.get_action( y=y, x=x )
             if action != None:
                 if strk == '{': action.handle_decrement( track, settings )
