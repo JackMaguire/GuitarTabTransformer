@@ -100,7 +100,7 @@ public:
     return n_notes_per_octave*int(octave_) + int(letter_);
   }
 
-public:
+public: //operators
 
   operator signed char() const{
     return as_int();
