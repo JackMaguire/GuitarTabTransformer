@@ -20,8 +20,6 @@ struct MeasureBoxSettings {
   rep::TimeSignature time_sig;
 
   bool x_is_beat( int const x ) const {
-    //if( x < 0 ) return false;
-    //if( x >= measure_width ) return false;
     int const beat_size = measure_width / time_sig.beats_per_measure();
     return x % beat_size == 0;
   }
@@ -30,21 +28,20 @@ struct MeasureBoxSettings {
   beat_positions() const {
     std::vector< int > beats;
     beats.reserve( time_sig.beats_per_measure() );
+
     int const beat_size = measure_width / time_sig.beats_per_measure();
     for( int i = 0; i < time_sig.beats_per_measure(); ++i ){
       beats.push_back( i * beat_size );
     }
+
     return beats;
   }
-
 };
 
 class MeasureBox {
 public:
-  
-  struct CharVal {
-    //constexpr ~CharVal() = default;
 
+  struct CharVal {
     int color = 0;
     short int note_index = -1;
     char c;
@@ -58,6 +55,10 @@ public:
     initialize( measure, g, settings );
   }
 
+  static
+  void run_unit_tests();
+
+public: //utilities
   int width() const {
     if( render_.empty() ) return 0;
     return render_[0].size();
@@ -79,11 +80,6 @@ public:
     measure_->add( mn );
   }
 
-  static
-  void run_unit_tests();
-
-public:
-  //python helper
   int
   annotation_index_for_cell( int const x ) const {
     return ann_for_cell_[ x ];
@@ -181,7 +177,7 @@ MeasureBox::initialize(
 
     ++note_index;
   }
-  
+
 }
 
 void
@@ -202,7 +198,7 @@ MeasureBox::run_unit_tests(){
   MeasureBoxSettings settings;
   settings.time_sig = t.time_signature;
 
-  { // measure 0    
+  { // measure 0
     MeasureBox const mbox(
       & t.measures[0],
       t.guitar,
