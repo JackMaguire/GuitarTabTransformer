@@ -192,33 +192,27 @@ public:
 
     return standard_guitar();
   }
-  
+
 };
 
 void
 Guitar::run_unit_tests(){
-  {//test serialization
-    json j;
-    Guitar g1 = GuitarFactory::dropD_bass_guitar();
-    g1.serialize( j );
+  json j;
+  Guitar g1 = GuitarFactory::dropD_bass_guitar();
+  g1.serialize( j );
 
-    //std::cout << j.dump() << std::endl;
+  Guitar g2 = GuitarFactory::standard_seven_string_guitar();
+  g2.deserialize( j );
 
-    Guitar g2 = GuitarFactory::standard_seven_string_guitar();
-    g2.deserialize( j );
-
-    GTT_ASSERT_EQUALS( g2.strings_.size(), 4 );
-    GTT_ASSERT_EQUALS( g2.strings_[0].open_string_note().as_int(),
-      "G/2"_note.as_int() );
-    GTT_ASSERT_EQUALS( g2.strings_[1].open_string_note().as_int(),
-      "D/2"_note.as_int() );
-    GTT_ASSERT_EQUALS( g2.strings_[2].open_string_note().as_int(),
-      "A/1"_note.as_int() );
-    GTT_ASSERT_EQUALS( g2.strings_[3].open_string_note().as_int(),
-      "D/1"_note.as_int() );
-
-  }
-
+  GTT_ASSERT_EQUALS( g2.strings_.size(), 4 );
+  GTT_ASSERT_EQUALS( g2.strings_[0].open_string_note().as_int(),
+    "G/2"_note.as_int() );
+  GTT_ASSERT_EQUALS( g2.strings_[1].open_string_note().as_int(),
+    "D/2"_note.as_int() );
+  GTT_ASSERT_EQUALS( g2.strings_[2].open_string_note().as_int(),
+    "A/1"_note.as_int() );
+  GTT_ASSERT_EQUALS( g2.strings_[3].open_string_note().as_int(),
+    "D/1"_note.as_int() );
 }
 
 } // rep
