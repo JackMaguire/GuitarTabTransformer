@@ -17,19 +17,14 @@ namespace rep {
 constexpr float EIGHTH = 1.0 / 8.0;
 
 struct MeasureNote {
-  
+
   template<typename T>
   MeasureNote(
     T const & t,
     float const start,
     float const l,
     bool const rest = false
-  ) :
-    note( t ),
-    is_rest( rest ),
-    starting_point( start ),
-    length( l )
-  {}
+  );
 
   template<typename T>
   MeasureNote(
@@ -38,42 +33,21 @@ struct MeasureNote {
     float const start,
     float const l,
     bool const rest = false
-  ) :
-    note( t ),
-    is_rest( rest ),
-    starting_point( start ),
-    length( l )
-  {
-    string_assignment = guitar.highest_string_for_note( note );
-  }
+  );
 
   MeasureNote( json const & j ){
     deserialize( j );
   }
 
-  //MeasureNote() = default;
-
-
-
   bool
-  operator< ( MeasureNote const & other ) const {
-    if( starting_point != other.starting_point )
-      return starting_point < other.starting_point;
-
-    if( length != other.length )
-      return length < other.length;
-
-    if( note != other.note )
-      return note < other.note;
-
-    return string_assignment < other.string_assignment;
-  }
+  operator< ( MeasureNote const & other ) const;
 
   float
   ending_point() const {
     return starting_point + length;
   }
 
+public: //serialization
   void
   serialize( json & j ) const {
     j[ "note" ] = note.as_string();
@@ -92,14 +66,13 @@ struct MeasureNote {
     string_assignment = j[ "string_assignment" ];
   }
 
+public:
   /*
     DATA
    */
-
-  //std::map< std::string, std::string > tags;
   Note note;
   bool is_rest = false;
-  
+
   //both measured as fraction of a measure
   float starting_point;
   float length;
@@ -111,8 +84,6 @@ struct MeasureNote {
 struct MeasureAnnotation {
 
   MeasureAnnotation() = default;
-  //MeasureAnnotation( MeasureAnnotation const & ) = default;
-  //MeasureAnnotation( MeasureAnnotation && ) = default;
 
   MeasureAnnotation( json const & j ){
     deserialize( j );
@@ -157,13 +128,22 @@ public:
   static
   void run_unit_tests();
 
-  auto size() const {
-    return notes_in_order_.size();
+  std::set< MeasureNote >
+  compute_rests() const;
+
+  void
+  set( std::set< MeasureNote > && notes ){
+    notes_in_order_ = notes;
   }
 
+public: //note utilities
   MeasureNote const &
   operator[]( int const i ) const {
     return *std::next( notes_in_order_.begin(), i );
+  }
+
+  auto size() const {
+    return notes_in_order_.size();
   }
 
   auto begin() {
@@ -182,14 +162,6 @@ public:
     return notes_in_order_.end();
   }
 
-  std::set< MeasureNote >
-  compute_rests() const;
-
-  void
-  set( std::set< MeasureNote > && notes ){
-    notes_in_order_ = notes;
-  }
-
   void
   add( MeasureNote const & mn ) {
     notes_in_order_.insert( mn );
@@ -200,7 +172,7 @@ public:
     notes_in_order_.erase( std::next( notes_in_order_.begin(), index ) );
   }
 
-public: //annotations
+public: //annotation utilities
   void
   add_annotation( MeasureAnnotation const & ann ){
     annotations_.push_back( ann );
@@ -250,14 +222,13 @@ public: //serialization
       j[ std::to_string(count++) ] = j2;
     }
     j[ "count" ] = count;
-    
+
     for( MeasureAnnotation const & ann : annotations_ ){
       json j2;
       ann.serialize( j2 );
       j[ std::to_string(count++) ] = j2;
     }
     j[ "ann_count" ] = count;
-
 
     j[ "total_count" ] = count;
   }
@@ -283,9 +254,53 @@ public: //serialization
 
 
 private:
-  std::set< MeasureNote > notes_in_order_; //inefficient but portable
+  std::set< MeasureNote > notes_in_order_; //inefficient but easy
   std::vector< MeasureAnnotation > annotations_;
 };
+
+template< typename T >
+MeasureNote::MeasureNote(
+  T const & t,
+  float const start,
+  float const l,
+  bool const rest = false
+) :
+  note( t ),
+  is_rest( rest ),
+  starting_point( start ),
+  length( l )
+{}
+
+template<typename T>
+MeasureNote::MeasureNote(
+  T const & t,
+  Guitar const & guitar,
+  float const start,
+  float const l,
+  bool const rest = false
+) :
+  note( t ),
+  is_rest( rest ),
+  starting_point( start ),
+  length( l )
+{
+  string_assignment = guitar.highest_string_for_note( note );
+}
+
+bool
+MeasureNote::operator< ( MeasureNote const & other ) const {
+  if( starting_point != other.starting_point )
+    return starting_point < other.starting_point;
+
+  if( length != other.length )
+    return length < other.length;
+
+  if( note != other.note )
+    return note < other.note;
+
+  return string_assignment < other.string_assignment;
+}
+
 
 std::set< MeasureNote >
 Measure::compute_rests() const {
@@ -460,7 +475,7 @@ Measure::run_unit_tests(){
 
     ++iter;
     GTT_ASSERT_EQUALS( iter->string_assignment, 4 );
-    
+
   }
 }
 
