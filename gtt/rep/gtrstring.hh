@@ -26,6 +26,7 @@ public:
   static
   void run_unit_tests();
 
+public: //utilities
   signed char
   get_fret( Note const & note ) const {
     return note - open_string_note_;
@@ -105,8 +106,6 @@ GtrString::run_unit_tests(){
     json j;
     GtrString const s1( "A/2", 22 );
     s1.serialize( j );
-
-    //std::cout << j.dump() << std::endl;
 
     GtrString s2( "Eb/3", 23 );
     s2.deserialize( j );
