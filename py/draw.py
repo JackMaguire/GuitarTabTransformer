@@ -6,7 +6,7 @@ from py.settings import Settings
 from py.actions import *
 
 import curses
-from curses.textpad import rectangle
+#from curses.textpad import rectangle
 
 def add_over_range( local_actions, y, x, string, action ):
      for i in range( 0, len( string ) ):
@@ -42,6 +42,7 @@ def draw_text_at_top(
     # Key
     key_str = track.key_str()
     stdscr.addstr( y, x, key_str, text_color )
+    add_action( x, key_str, KeySigAnnotation() )
     x += len(key_str) + 4
 
     # Width
@@ -169,7 +170,8 @@ def draw_measure(
 
 def draw_track( stdscr, track, cursoryx, settings: Settings ):
     maxy, maxx = stdscr.getmaxyx()
-    rectangle(stdscr, 0, 0, maxy-2, maxx-1)
+    stdscr.border(0)
+    #rectangle(stdscr, 0, 0, maxy-2, maxx-1)
 
     local_actions = ActionMap( stdscr )
 

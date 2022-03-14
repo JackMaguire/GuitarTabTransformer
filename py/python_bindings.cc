@@ -197,7 +197,9 @@ PYBIND11_MODULE(gtt, m) {
     measure.def( "set", &Measure::set );
     measure.def( "add", &Measure::add );
     measure.def( "remove", &Measure::remove );
+
     measure.def( "change_string_assignment", &Measure::change_string_assignment );
+    measure.def( "change_note", &Measure::change_note );
 
     measure.def( "add_annotation", &Measure::add_annotation );
     measure.def( "n_annotations", &Measure::n_annotations );

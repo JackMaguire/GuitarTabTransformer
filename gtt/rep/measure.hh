@@ -205,6 +205,14 @@ public: //annotation utilities
 
 public: //quality of life in python
   void
+  change_note( int const index, int const assignment ){
+    MeasureNote copy = (*this)[index];
+    remove( index );
+    copy.note = Note( assignment );
+    add( copy );
+  }
+
+  void
   change_string_assignment( int const index, int const assignment ){
     MeasureNote copy = (*this)[index];
     remove( index );

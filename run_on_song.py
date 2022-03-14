@@ -16,11 +16,6 @@ from py.colors import *
 
 import argparse
 
-class Cursor:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-
 def close( stdscr ):
     curses.nocbreak()
     stdscr.keypad(False)
@@ -38,10 +33,9 @@ def make_edit_window( stdscr ):
     stdscr.refresh()
 
     box = Textbox(editwin)
-    box.edit(enter_is_terminate)
 
-    # Let the user edit until Ctrl-G is struck.
-    #box.edit()
+    # Let the user edit until Ctrl-G or Enter is struck.
+    box.edit(enter_is_terminate)
 
     # Get resulting contents
     message = box.gather()
@@ -113,8 +107,7 @@ def handle_new_note( k, stdscr, floating_measures, track ):
     else:
         fm = fm[0]
 
-    str_index = y - fm.start_y - 1
-    #g = track.guitar
+    str_index = y - fm.start_y - 1 #-1 for annotation line
     s = track.guitar.get_string( str_index )
     fret = char_to_fret( k, stdscr )
     if fret < 0: return

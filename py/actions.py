@@ -167,3 +167,32 @@ class EditAnnotation( Action ):
         #time.sleep( 3 )
         if settings.mode_str() == "ADD_NOTES":
             track.measures[self.measure_ind].toggle_annotation_color(self.ann_index)
+
+
+class KeySigAnnotation( Action ):
+    def handle_increment( self, track, settings ):
+        new_key = gtt.NoteLetter( (int(track.major_key) + 1) % int(gtt.NoteLetter.COUNT) )
+        if settings.mode_str() == "EDIT" or settings.mode_str() == "ADD_NOTES":
+            track.major_key = new_key
+
+        if settings.mode_str() == "ADD_NOTES":
+            for m in track.measures:
+                for note_ind in range( 0, len(m) ):
+                    curr_note = m[ note_ind ].note.as_int()
+                    new_note = curr_note + 1
+                    m.change_note( note_ind, new_note )
+
+
+
+    def handle_decrement( self, track, settings ):
+        new_key = gtt.NoteLetter( (int(track.major_key) - 1) % int(gtt.NoteLetter.COUNT) )
+        if settings.mode_str() == "EDIT" or settings.mode_str() == "ADD_NOTES":
+            track.major_key = new_key
+
+        if settings.mode_str() == "ADD_NOTES":
+            for m in track.measures:
+                for note_ind in range( 0, len(m) ):
+                    curr_note = m[ note_ind ].note.as_int()
+                    new_note = curr_note - 1
+                    m.change_note( note_ind, new_note )
+            
