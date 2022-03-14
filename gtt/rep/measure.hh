@@ -263,7 +263,7 @@ MeasureNote::MeasureNote(
   T const & t,
   float const start,
   float const l,
-  bool const rest = false
+  bool const rest
 ) :
   note( t ),
   is_rest( rest ),
@@ -277,7 +277,7 @@ MeasureNote::MeasureNote(
   Guitar const & guitar,
   float const start,
   float const l,
-  bool const rest = false
+  bool const rest
 ) :
   note( t ),
   is_rest( rest ),
