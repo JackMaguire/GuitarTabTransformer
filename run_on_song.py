@@ -109,6 +109,7 @@ def handle_new_note( k, stdscr, floating_measures, track ):
 
     str_index = y - fm.start_y - 1 #-1 for annotation line
     s = track.guitar.get_string( str_index )
+
     fret = char_to_fret( k, stdscr )
     if fret < 0: return
 
@@ -195,7 +196,7 @@ def main( stdscr ):
             continue # no save
         elif settings.mode_str() == "ADD_NOTES" and strk in '1234567890!@#$%^&*()`~+':
             handle_new_note( k, stdscr, floating_measures, track )
-            moveto( *cursoryx )
+            moveto( y, x )
         elif strk == '+':
             prompt_for_local_action( stdscr, local_actions, track, settings )
         elif strk in '{}':
