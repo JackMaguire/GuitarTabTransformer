@@ -15,7 +15,7 @@ class Settings:
         self.x_gap = 6
         self.n_rows_skipped = 0
 
-        self.possible_modes = [ "VIEW", "EDIT", "ADD_NOTES" ]
+        self.possible_modes = [ "VIEW", "EDIT", "ADD_NOTES", "EDIT_MEASURES" ]
         self.mode_index = 0
 
     def move_cursor( self, dy, dx=0 ):

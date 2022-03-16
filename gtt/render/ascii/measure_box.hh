@@ -113,12 +113,12 @@ MeasureBox::initialize(
   settings_ = settings;
 
   // create empty string
-  CharVal const empty_note({ 242, 0, '-' });
+  CharVal const empty_note({ 242, -1, '-' });
   std::vector const empty_string( settings_.measure_width, empty_note );
   render_.resize( g.size()+1, empty_string );
 
   //annotation_line
-  CharVal const empty_ann({ 242, 0, ' ' });
+  CharVal const empty_ann({ 242, -1, ' ' });
   std::vector const empty_ann_str( settings_.measure_width, empty_ann );
   render_[0] = empty_ann_str;
 

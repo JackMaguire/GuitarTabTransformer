@@ -18,6 +18,8 @@ class ActionMap:
         self.actions[ y ][ x ] = action
 
     def get_action( self, y, x ):
+        #print( y, x, self.actions[ y ][ x ] )
+        #time.sleep( 3 )
         return self.actions[ y ][ x ]
 
 class Action:
@@ -147,11 +149,12 @@ class AddAnnotation( Action ):
         self.starting_point = starting_point
 
     def handle_string_entry( self, track, settings, setting_str ):
-        ann = MeasureAnnotation()
-        ann.text = setting_str
-        ann.starting_point = self.starting_point
-        ann.color = 0
-        track.measures[ self.measure_ind ].add_annotation( ann )
+        if settings.mode_str() == "ADD_NOTES" or settings.mode_str() == "EDIT":
+            ann = MeasureAnnotation()
+            ann.text = setting_str
+            ann.starting_point = self.starting_point
+            ann.color = 0
+            track.measures[ self.measure_ind ].add_annotation( ann )
 
 class EditAnnotation( Action ):
     def __init__( self, measure_ind, ann_index ):
@@ -159,13 +162,11 @@ class EditAnnotation( Action ):
         self.ann_index = ann_index
 
     def handle_delete( self, track, settings ):
-        if settings.mode_str() == "ADD_NOTES":
+        if settings.mode_str() == "ADD_NOTES" or settings.mode_str() == "EDIT":
             track.measures[ self.measure_ind ].remove_annotation( self.ann_index )
 
     def handle_increment( self, track, settings ):
-        #print( 1 )
-        #time.sleep( 3 )
-        if settings.mode_str() == "ADD_NOTES":
+        if settings.mode_str() == "ADD_NOTES" or settings.mode_str() == "EDIT":
             track.measures[self.measure_ind].toggle_annotation_color(self.ann_index)
 
 
@@ -196,3 +197,19 @@ class KeySigAnnotation( Action ):
                     new_note = curr_note - 1
                     m.change_note( note_ind, new_note )
             
+
+class EditMeasure( Action ):
+    def __init__( self, measure_ind ):
+        self.measure_ind = measure_ind
+
+    def handle_delete( self, track, settings ):
+        if settings.mode_str() == "EDIT_MEASURES":
+            track.delete_measure( self.measure_ind )
+
+    def handle_increment( self, track, settings ):
+        if settings.mode_str() == "EDIT_MEASURES":
+            track.add_measure_after( self.measure_ind )
+
+    def handle_decrement( self, track, settings ):
+        if settings.mode_str() == "EDIT_MEASURES":
+            track.add_measure_before( self.measure_ind )

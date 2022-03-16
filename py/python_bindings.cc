@@ -239,6 +239,10 @@ PYBIND11_MODULE(gtt, m) {
     track.def( "save_to_file", &Track::save_to_file );
     track.def( "load_from_file", &Track::load_from_file );
 
+    track.def( "delete_measure", &Track::delete_measure );
+    track.def( "add_measure_before", &Track::add_measure_before );
+    track.def( "add_measure_after", &Track::add_measure_after );
+
 
     py::module render = m.def_submodule( "render" );
     py::module ascii = render.def_submodule( "ascii" );

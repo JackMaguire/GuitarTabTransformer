@@ -151,7 +151,9 @@ def draw_measure(
             chardata = mbox.at( i, j )
             stdscr.addch( y, x, chardata.char, curses.color_pair(chardata.color) )
             if chardata.note_index >= 0:
-                local_actions.set_action( y=y, x=x, action=ExistingNoteAction( m_index, chardata.note_index ) )
+                 local_actions.set_action( y=y, x=x, action=ExistingNoteAction( m_index, chardata.note_index ) )
+            else:
+                 local_actions.set_action( y=y, x=x, action=EditMeasure( m_index ) )
 
     # annotation actions
     for i in range( 0, mbox.width() ):

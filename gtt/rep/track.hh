@@ -75,6 +75,22 @@ public: //DESERIALIZATION
     deserialize( j );
   }
 
+public: //utilities
+  void
+  delete_measure( int const index ){
+    measures.erase( std::next( measures.begin(), index ) );
+  }
+
+  void
+  add_measure_before( int const index ){
+    measures.emplace( std::next( measures.begin(), index ) );
+  }
+
+  void
+  add_measure_after( int const index ){
+    measures.emplace( std::next( measures.begin(), index+1 ) );
+  }
+
 public: //DATA
   Guitar guitar = GuitarFactory::standard_guitar();
   std::vector< Measure > measures;
