@@ -213,3 +213,53 @@ class EditMeasure( Action ):
     def handle_decrement( self, track, settings ):
         if settings.mode_str() == "EDIT_MEASURES":
             track.add_measure_before( self.measure_ind )
+
+class MinFret( Action ):
+    def handle_string_entry( self, track, settings, setting_str ):
+        try:
+            min_fret = int( setting_str )
+        except:
+            return
+
+        if settings.mode_str() == "ADD_NOTES" or settings.mode_str() == "EDIT":
+            g = track.guitar
+            for m in track.measures:
+                for note_ind in range( 0, len(m) ):
+                    curr_ass = m[ note_ind ].string_assignment
+                    curr_note = m[ note_ind ].note#.as_int()
+                    s = g[curr_ass].get_fret
+                    curr_fret = g[curr_ass].get_fret( curr_note )
+
+                    while curr_fret < min_fret and curr_ass+1 < track.guitar.size():
+                        old_ass = curr_ass
+                        m.change_string_assignment( note_ind, curr_ass+1 )
+                        curr_ass = m[ note_ind ].string_assignment
+                        assert curr_ass == old_ass+1
+                        curr_note = m[ note_ind ].note#.as_int()
+                        s = g[curr_ass].get_fret
+                        curr_fret = g[curr_ass].get_fret( curr_note )
+
+class MaxFret( Action ):
+    def handle_string_entry( self, track, settings, setting_str ):
+        try:
+            max_fret = int( setting_str )
+        except:
+            return
+
+        if settings.mode_str() == "ADD_NOTES" or settings.mode_str() == "EDIT":
+            g = track.guitar
+            for m in track.measures:
+                for note_ind in range( 0, len(m) ):
+                    curr_ass = m[ note_ind ].string_assignment
+                    curr_note = m[ note_ind ].note#.as_int()
+                    s = g[curr_ass].get_fret
+                    curr_fret = g[curr_ass].get_fret( curr_note )
+
+                    while curr_fret > max_fret and curr_ass > 0:
+                        old_ass = curr_ass
+                        m.change_string_assignment( note_ind, curr_ass-1 )
+                        curr_ass = m[ note_ind ].string_assignment
+                        assert curr_ass == old_ass-1
+                        curr_note = m[ note_ind ].note#.as_int()
+                        s = g[curr_ass].get_fret
+                        curr_fret = g[curr_ass].get_fret( curr_note )

@@ -68,6 +68,23 @@ def draw_text_at_top(
     add_action( x, next_str, SaveJsonPlease() )
     x += len( next_str ) + 2
 
+
+    # NEXT LINE
+    y+= 1
+    x = settings.x_gap
+
+    # "MIN/MAX_FRET"
+    next_str = "MIN_FRET"
+    stdscr.addstr( y, x, next_str, curses.color_pair(3) )
+    add_action( x, next_str, MinFret() )
+    x += len( next_str ) + 2
+
+    next_str = "MAX_FRET"
+    stdscr.addstr( y, x, next_str, curses.color_pair(4) )
+    add_action( x, next_str, MaxFret() )
+    x += len( next_str ) + 4
+    
+
 def calc_m_per_row( measure_width, maxx ):
     return int( (maxx-6) / (measure_width+1) )
 
